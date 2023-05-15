@@ -30,7 +30,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    stateMachine.periodic();
+  }
 
   @Override
   public void disabledInit() {
