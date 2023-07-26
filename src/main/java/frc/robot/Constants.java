@@ -1,6 +1,6 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
+//TODO: TUNE ALL OF THIS
 public class Constants {
 	//Controllers
 	public static final int DRIVE_CONTROLLER_PORT = 0;
@@ -47,6 +48,9 @@ public class Constants {
 
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = chosenModule.canCoderInvert;
+		
+		/* Swerve Voltage Compensation */
+		public static final double voltageComp = 12.0;
 
         /* Swerve Current Limiting */
         public static final int angleContinuousCurrentLimit = 25;
@@ -82,15 +86,21 @@ public class Constants {
         public static final double driveKV = (1.51 / 12);
         public static final double driveKA = (0.27 / 12);
 
+		/* Drive Motor Conversion Factors */
+		public static final double driveConversionPositionFactor =
+        	(chosenModule.wheelDiameter * Math.PI) / driveGearRatio;
+    	public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0;
+    	public static final double angleConversionFactor = 360.0 / angleGearRatio;
+
         /* Swerve Profiling Values */
         /** Meters per Second */
         public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
         /** Radians per Second */
         public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
 
-        /* Neutral Modes */
-        public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
-        public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+        /* Neutral (Idle) Modes */
+        public static final IdleMode angleNeutralMode = IdleMode.kCoast;
+        public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
