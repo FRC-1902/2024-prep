@@ -1,14 +1,7 @@
 package frc.lib.sensors;
 
-import java.util.Map;
-
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import frc.robot.Constants;
 
 public class IMU {
 
@@ -17,7 +10,7 @@ public class IMU {
   private final BNO055 bno055 = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
       BNO055.vector_type_t.VECTOR_EULER);
 
-  private DoubleLogEntry headingLogger, rollLogger, pitchLogger, yawLogger, turnLogger, offsetLogger;
+  private DoubleLogEntry headingLogger, rollLogger, pitchLogger, turnLogger, offsetLogger;
 
   private void initializeLogger() {
     headingLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/heading");

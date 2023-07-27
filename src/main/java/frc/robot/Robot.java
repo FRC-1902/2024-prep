@@ -23,8 +23,6 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
-
   @Override
   public void robotInit() {
     controllers = Controllers.getInstance();
@@ -39,8 +37,6 @@ public class Robot extends TimedRobot {
     );
 
     ctreConfigs = new CTREConfigs();
-    // TODO: remove robot container and commands
-    m_robotContainer = new RobotContainer();
   }
 
   @Override
@@ -63,14 +59,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     stateMachine.setState("auto");
-
-    //TODO: remove auto commands
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
   }
 
   @Override

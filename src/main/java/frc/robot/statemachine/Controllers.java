@@ -3,7 +3,6 @@ package frc.robot.statemachine;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants;
 
