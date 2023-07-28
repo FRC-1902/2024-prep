@@ -19,8 +19,6 @@ public class Robot extends TimedRobot {
   private RobotStateManager stateMachine;
   private IMU imu;
 
-  public static CTREConfigs ctreConfigs;
-
   private Command m_autonomousCommand;
 
   @Override
@@ -32,11 +30,9 @@ public class Robot extends TimedRobot {
     stateMachine.addStates(
       new DisabledState("disabled", null),
       new AutoState("auto", null),
-      new TeleOpState("teleOp", null),
+      //new TeleOpState("teleOp", null), //TODO: re add me
       new TestState("test", null)
     );
-
-    ctreConfigs = new CTREConfigs();
   }
 
   @Override

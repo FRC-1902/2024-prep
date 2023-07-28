@@ -4,7 +4,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-
+import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil.Usage;
@@ -26,7 +27,7 @@ public class SwerveModule {
   
   private RelativeEncoder driveEncoder;
   private RelativeEncoder integratedAngleEncoder;
-  private CANCoder angleEncoder;
+  private DutyCycleEncoder angleEncoder;
 
   private final SparkMaxPIDController driveController;
   private final SparkMaxPIDController angleController;
@@ -38,7 +39,7 @@ public class SwerveModule {
     this.angleOffset = moduleConstants.angleOffset;
     
     /* Angle Encoder Config */
-    angleEncoder = new CANCoder(moduleConstants.cancoderID);
+    angleEncoder = new DutyCycleEncoder(moduleConstants.cancoderID);
     configAngleEncoder();
 
     /* Angle Motor Config */
@@ -89,7 +90,7 @@ public class SwerveModule {
   }
 
   public Rotation2d getCanCoder(){
-    return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
+    return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition() * 360.0);
   }
 
   public void resetToAbsolute(){
@@ -97,9 +98,8 @@ public class SwerveModule {
     integratedAngleEncoder.setPosition(absolutePosition);
   }
 
-  private void configAngleEncoder(){        
-    angleEncoder.configFactoryDefault();
-    angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
+  private void configAngleEncoder(){     
+    angleEncoder.reset();
   }
 
   private void configAngleMotor(){
