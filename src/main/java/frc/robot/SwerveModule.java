@@ -105,7 +105,7 @@ public class SwerveModule {
   private void configAngleMotor(){
     angleMotor.restoreFactoryDefaults();
     CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly);
-    angleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
+    angleMotor.setSmartCurrentLimit(Constants.Swerve.angleCurrentLimit);
     angleMotor.setInverted(Constants.Swerve.angleMotorInvert);
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
     integratedAngleEncoder.setPositionConversionFactor(Constants.Swerve.angleConversionFactor);
@@ -121,7 +121,7 @@ public class SwerveModule {
   private void configDriveMotor(){        
     driveMotor.restoreFactoryDefaults();
     CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kAll);
-    driveMotor.setSmartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
+    driveMotor.setSmartCurrentLimit(Constants.Swerve.driveCurrentLimit);
     driveMotor.setInverted(Constants.Swerve.driveMotorInvert);
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
