@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
     stateMachine.addStates(
       new DisabledState("disabled", null),
       new AutoState("auto", null),
-      //new TeleOpState("teleOp", null), //TODO: re add me
+      new TeleOpState("teleOp", null),
       new TestState("test", null)
     );
   }

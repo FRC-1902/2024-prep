@@ -2,6 +2,7 @@ package frc.lib.util;
 
 import edu.wpi.first.math.util.Units;
 
+//XXX: Angle PIDs not tuned for most rev modules, will need to be tuned
 /* Contains values and required settings for common COTS swerve modules. */
 public class COTSFalconSwerveConstants {
     public final double wheelDiameter;
@@ -37,7 +38,7 @@ public class COTSFalconSwerveConstants {
         /** 12.8 : 1 */
         double angleGearRatio = (12.8 / 1.0);
  
-        double angleKP = 0.2;
+        double angleKP = 0.01;
         double angleKI = 0.0;
         double angleKD = 0.0;
         double angleKF = 0.0;

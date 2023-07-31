@@ -33,7 +33,6 @@ public class SwerveModule {
   private final SparkMaxPIDController angleController;
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
-
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
     this.moduleNumber = moduleNumber;
     this.angleOffset = moduleConstants.angleOffset;

@@ -22,7 +22,7 @@ public class TeleOpState implements State{
         this.name = name;
         this.parent = parent;
         controllers = Controllers.getInstance();
-        s_Swerve = new Swerve();
+        s_Swerve = Swerve.getInstance();
     }
     
     @Override

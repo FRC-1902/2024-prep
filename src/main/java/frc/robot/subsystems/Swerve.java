@@ -20,12 +20,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
+    private static Swerve instance;
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     // public Pigeon2 gyro;
     public IMU imu;
 
-    public Swerve() {
+    private Swerve() {
         // gyro = new Pigeon2(Constants.Swerve.pigeonID);
         // gyro.configFactoryDefault();
         // zeroGyro();
@@ -127,5 +128,12 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
+    }
+
+    public static Swerve getInstance(){
+        if(instance == null){
+            instance = new Swerve();
+        }
+        return instance;
     }
 }
