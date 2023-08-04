@@ -46,13 +46,13 @@ public class TeleOpState implements State{
         double translationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LY), Constants.stickDeadband);
         double strafeVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LX), Constants.stickDeadband);
         double rotationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.RX), Constants.stickDeadband);
-        boolean isRobotCentric = !controllers.get(ControllerName.DRIVE, Button.LB);
+        boolean isFieldRelative = !controllers.get(ControllerName.DRIVE, Button.LB);
 
         /* Drive */
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
-            isRobotCentric, 
+            isFieldRelative, 
             true
         );
     }

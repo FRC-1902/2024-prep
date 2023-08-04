@@ -5,6 +5,7 @@ import frc.robot.statemachine.State;
 import java.util.Arrays;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -23,7 +24,6 @@ public class TestState implements State{
         this.name = name;
         this.parent = parent;
         swerve = Swerve.getInstance();
-        forwardStationaryState = new SwerveModuleState(0.0, Rotation2d.fromDegrees(0));
     }
     
     @Override
@@ -44,9 +44,12 @@ public class TestState implements State{
 
     @Override
     public void periodic(RobotStateManager rs) {
-        // SwerveModuleState[] state = new SwerveModuleState[4];
-        // Arrays.fill(state, forwardStationaryState);
-        // swerve.setModuleStates(state);
+        // swerve.drive(
+        //     new Translation2d(0.2, 0).times(Constants.Swerve.maxSpeed), 
+        //     0, 
+        //     false, 
+        //     true
+        // );
 
         SwerveModulePosition[] positions = swerve.getModulePositions();
         int i = 0;
