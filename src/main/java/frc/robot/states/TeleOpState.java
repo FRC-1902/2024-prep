@@ -60,7 +60,7 @@ public class TeleOpState implements State{
     @Override
     public boolean handleEvent(Event event, RobotStateManager rs){
         if(event.button == Button.Y) {
-            s_Swerve.zeroGyro();
+            s_Swerve.zeroGyro(); //TODO: fix me
             return true;
         }
         return false;

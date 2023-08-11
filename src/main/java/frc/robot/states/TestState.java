@@ -44,12 +44,12 @@ public class TestState implements State{
 
     @Override
     public void periodic(RobotStateManager rs) {
-        // swerve.drive(
-        //     new Translation2d(0.2, 0).times(Constants.Swerve.maxSpeed), 
-        //     0, 
-        //     false, 
-        //     true
-        // );
+        swerve.drive(
+            new Translation2d(0.2, 0).times(Constants.Swerve.maxSpeed), 
+            0, 
+            false, 
+            true
+        );
 
         SwerveModulePosition[] positions = swerve.getModulePositions();
         int i = 0;
