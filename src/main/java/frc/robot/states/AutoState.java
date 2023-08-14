@@ -1,6 +1,8 @@
 package frc.robot.states;
 
 import frc.robot.statemachine.State;
+import frc.robot.subsystems.Swerve;
+import frc.robot.autos.exampleAuto;
 import frc.robot.statemachine.RobotStateManager;
 
 public class AutoState implements State{
@@ -23,7 +25,9 @@ public class AutoState implements State{
     }
 
     @Override
-    public void enter() {}
+    public void enter() {
+        new exampleAuto(Swerve.getInstance());
+    }
 
     @Override
     public void leave() {}

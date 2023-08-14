@@ -22,12 +22,12 @@ public class Constants {
         // public static final int pigeonID = 1;
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
-        public static final COTSFalconSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
+        public static final COTSFalconSwerveConstants chosenModule =  
             COTSFalconSwerveConstants.SDSMK3(COTSFalconSwerveConstants.driveGearRatios.SDSMK3_Standard);
 
         /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(21.25); //TODO: This must be tuned to specific robot
-        public static final double wheelBase = Units.inchesToMeters(21.25); //TODO: This must be tuned to specific robot
+        public static final double trackWidth = Units.inchesToMeters(21.25); 
+        public static final double wheelBase = Units.inchesToMeters(21.25); 
         public static final double wheelCircumference = chosenModule.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -95,8 +95,6 @@ public class Constants {
         public static final IdleMode angleNeutralMode = IdleMode.kCoast;
         public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
-        //TODO: fix angle offsets, they are behaving strange
-        //XXX: when tuning angleOffsets, REMEMBER TO NOT DO RELATIVE TO GRYO!!!!
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
         public static final class Mod0 {
