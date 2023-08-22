@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.sensors.IMU;
 import frc.robot.statemachine.Controllers;
 import frc.robot.statemachine.RobotStateManager;
@@ -18,8 +17,6 @@ public class Robot extends TimedRobot {
   private Controllers controllers;
   private RobotStateManager stateMachine;
   private IMU imu;
-
-  private Command m_autonomousCommand;
 
   @Override
   public void robotInit() {

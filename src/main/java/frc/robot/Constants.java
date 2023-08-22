@@ -10,8 +10,8 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
-//TODO: TUNE ALL OF THIS
 public class Constants {
+    private Constants() {}
 	//Controllers
 	public static final int DRIVE_CONTROLLER_PORT = 0;
 	public static final int MANIP_CONTROLLER_PORT = 1;
@@ -19,7 +19,6 @@ public class Constants {
 	public static final double stickDeadband = 0.1;
 
     public static final class Swerve {
-        // public static final int pigeonID = 1;
         public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants chosenModule =  
@@ -86,10 +85,11 @@ public class Constants {
     	public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
         /* Swerve Profiling Values */
-        /** Meters per Second */ //TODO: this doesn't seem lime m/s
-        public static final double maxSpeed = 0.01;
-        /** Radians per Second */ //TODO: this doesn't seem lime rad/s
-        public static final double maxAngularVelocity = 0.1;
+        /* Must be max drivetrain speeds for open loop control */
+        /** Meters per Second */ 
+        public static final double maxSpeed = 3.5; //TODO: set me, should probably determine experimentally under load, currently unloaded values provided by sds
+        /** Radians per Second */
+        public static final double maxAngularVelocity = 3.8; //TODO: set me, should probably determine experimentally under load, currently unloaded values provided by sds
 
         /* Neutral (Idle) Modes */
         public static final IdleMode angleNeutralMode = IdleMode.kCoast;

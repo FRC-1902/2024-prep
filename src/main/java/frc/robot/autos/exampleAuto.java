@@ -1,13 +1,10 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.subsystems.Swerve;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +16,18 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-//TODO: remove command auto
+//TODO: remove command auto, look at other team's auto implementations
 public class exampleAuto extends SequentialCommandGroup {
-    private static final String FILEPATH = Robot.isReal() ? "/home/lvuser/deploy/pathplanner/generatedCSV/" : 
+    private static final String FILEPATH = RobotBase.isReal() ? "/home/lvuser/deploy/pathplanner/generatedCSV/" : 
         System.getProperty("user.dir") + "/src/main/deploy/pathplanner/generatedCSV/";
     private static final String CSV_DELIMITER = ",";
 
-    public exampleAuto(Swerve s_Swerve){
+    public exampleAuto(Swerve swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -50,22 +48,23 @@ public class exampleAuto extends SequentialCommandGroup {
         SwerveControllerCommand swerveControllerCommand =
             new SwerveControllerCommand(
                 exampleTrajectory,
-                s_Swerve::getPose,
+                swerve::getPose,
                 Constants.Swerve.swerveKinematics,
                 new PIDController(Constants.AutoConstants.kPXController, 0, 0),
                 new PIDController(Constants.AutoConstants.kPYController, 0, 0),
                 thetaController,
-                s_Swerve::setModuleStates,
-                s_Swerve);
+                swerve::setModuleStates,
+                swerve);
 
-        //TODO: motors aren't moving but nothing is erroring out
+        //TODO: this won't do anything as I removed the command scheduler
         addCommands(
-            new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
+            new InstantCommand(() -> swerve.resetOdometry(exampleTrajectory.getInitialPose())),
             swerveControllerCommand
         );
     }
 
     //Convert pathplanner JSON to wpiLib Trajectory
+    //TODO: find a better way to do this, points grabbed along splines and fed into a spline trajectory isn't great
     private List<Pose2d> poseGenerator(String fileName){
         List<Pose2d> poses = new ArrayList<>();
         

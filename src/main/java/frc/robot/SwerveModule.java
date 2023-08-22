@@ -4,13 +4,11 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import frc.lib.util.CTREModuleState;
+import frc.lib.util.ModuleStateOptimizer;
 import frc.lib.util.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 
-import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import frc.lib.util.CANSparkMaxUtil;
 import com.revrobotics.RelativeEncoder;
@@ -18,7 +16,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class SwerveModule {
-  public int moduleNumber;
+  private int moduleNumber;
   private Rotation2d angleOffset;
   private Rotation2d lastAngle;
 
@@ -58,7 +56,7 @@ public class SwerveModule {
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
     /* This is a custom optimize function, since default WPILib optimize assumes continuous controller which CTRE and Rev onboard is not */
-    desiredState = CTREModuleState.optimize(desiredState, getState().angle); 
+    desiredState = ModuleStateOptimizer.optimize(desiredState, getState().angle); 
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
   }
@@ -126,7 +124,7 @@ public class SwerveModule {
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
     driveEncoder.setPositionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
-    driveController.setP(Constants.Swerve.angleKP);
+    driveController.setP(Constants.Swerve.angleKP); //TODO: find why this is angleKP, I, and D or fix
     driveController.setI(Constants.Swerve.angleKI);
     driveController.setD(Constants.Swerve.angleKD);
     driveController.setFF(Constants.Swerve.angleKF);
@@ -141,5 +139,9 @@ public class SwerveModule {
 
   public SwerveModulePosition getPosition(){
     return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
+  }
+
+  public int getModuleNumber() {
+    return moduleNumber;
   }
 }
