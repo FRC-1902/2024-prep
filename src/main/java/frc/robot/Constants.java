@@ -87,9 +87,9 @@ public class Constants {
         /* Swerve Profiling Values */
         /* Must be max drivetrain speeds for open loop control */
         /** Meters per Second */ 
-        public static final double maxSpeed = 3.5; //TODO: set me, should probably determine experimentally under load, currently unloaded values provided by sds
+        public static final double maxSpeed = 3.23; //TODO: test me, Kevin values
         /** Radians per Second */
-        public static final double maxAngularVelocity = 3.8; //TODO: set me, should probably determine experimentally under load, currently unloaded values provided by sds
+        public static final double maxAngularVelocity = 9.933; //TODO: set me, Kevin values
 
         /* Neutral (Idle) Modes */
         public static final IdleMode angleNeutralMode = IdleMode.kCoast;
