@@ -1,6 +1,7 @@
 package frc.robot.states;
 
 import frc.robot.statemachine.State;
+import frc.robot.statemachine.Controllers.Action;
 import frc.robot.statemachine.Controllers.Axis;
 import frc.robot.statemachine.Controllers.Button;
 import frc.robot.statemachine.Controllers.ControllerName;
@@ -48,6 +49,12 @@ public class TeleOpState implements State{
         double rotationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.RX), Constants.stickDeadband);
         boolean isFieldRelative = !controllers.get(ControllerName.DRIVE, Button.LB);
 
+        //cube controls for better handling, and scale down for softer pre-season movement
+        translationVal = Math.pow(translationVal, 3.0);
+        translationVal *= 0.8;
+        rotationVal = Math.pow(rotationVal, 3.0);
+        rotationVal *= 0.8;
+
         /* Drive */
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
@@ -59,8 +66,9 @@ public class TeleOpState implements State{
 
     @Override
     public boolean handleEvent(Event event, RobotStateManager rs){
-        if(event.button == Button.Y) {
-            s_Swerve.zeroGyro(); //TODO: test me
+        if(event.button == Button.Y && event.action == Action.RELEASED) {
+            System.out.println("Y");
+            s_Swerve.zeroGyro();
             return true;
         }
         return false;
