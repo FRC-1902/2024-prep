@@ -50,6 +50,7 @@ public class PurePursuitFollower implements State{
             swerveSubsystem.getModulePositions(), 
             new Pose2d(0.0, 0.0, initialAngle)
         );
+
         waypoints = new Waypoints(FILEPATH + "TestPath1.csv");
     }
 
@@ -64,6 +65,8 @@ public class PurePursuitFollower implements State{
 
     private void pursuit(Pose2d estimatedPose) {
         double searchDistance = 0.1; //TODO: tune and migrate to constants
+        double minimumVelocity = 0.01; // stops deadlocking at 0 velocity //TODO: tune and migrate to consttants
+        
         double targetVelocity = waypoints.findClosestVelocity(estimatedPose);
         Rotation2d targetFacingAngle = waypoints.findClosestPose(estimatedPose).getRotation();
         Pose2d lookahead = waypoints.findLookahead(estimatedPose, searchDistance);
@@ -71,9 +74,11 @@ public class PurePursuitFollower implements State{
             lookahead = waypoints.findClosestPose(estimatedPose);
 
         // rotation between current and target
-        Rotation2d driveAngle = Rotation2d.fromRadians(
-            0.0// TODO: write me
-        );
+        Rotation2d driveAngle = waypoints.facePoint(estimatedPose.getTranslation(), lookahead.getTranslation());
+
+        // XXX: may need to rexamine later, possibly removing initial acceleration
+        targetVelocity = Math.abs(targetVelocity);
+        targetVelocity = Math.max(targetVelocity, minimumVelocity);
 
         Translation2d driveTarget = new Translation2d(targetVelocity, driveAngle);
 
@@ -83,7 +88,7 @@ public class PurePursuitFollower implements State{
             true,
             false
         );
-        // ending handling? (test without first)
+        // XXX: ending handling?
 
         logPursuit(estimatedPose, lookahead, driveTarget, targetFacingAngle);
     }
