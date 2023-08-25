@@ -7,6 +7,8 @@ import frc.robot.statemachine.Controllers.Button;
 import frc.robot.statemachine.Controllers.ControllerName;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DataLogManager;
+import frc.lib.sensors.IMU;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.statemachine.Controllers;
@@ -18,12 +20,14 @@ public class TeleOpState implements State{
     private String parent;
     private final Swerve s_Swerve;
     private Controllers controllers;
+    private IMU imu;
     
     public TeleOpState(String name, String parent){
         this.name = name;
         this.parent = parent;
         controllers = Controllers.getInstance();
         s_Swerve = Swerve.getInstance();
+        imu = IMU.getInstance();
     }
     
     @Override
@@ -60,7 +64,7 @@ public class TeleOpState implements State{
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             isFieldRelative, 
-            true
+            false
         );
     }
 
