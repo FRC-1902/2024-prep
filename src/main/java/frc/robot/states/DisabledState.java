@@ -1,7 +1,7 @@
 package frc.robot.states;
 
-import frc.robot.statemachine.State;
-import frc.robot.statemachine.RobotStateManager;
+import frc.lib.statemachine.RobotStateManager;
+import frc.lib.statemachine.State;
 
 public class DisabledState implements State{
     private String name;

@@ -6,8 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.lib.sensors.IMU;
-import frc.robot.statemachine.Controllers;
-import frc.robot.statemachine.RobotStateManager;
+import frc.lib.statemachine.Controllers;
+import frc.lib.statemachine.RobotStateManager;
 import frc.robot.states.AutoState;
 import frc.robot.states.DisabledState;
 import frc.robot.states.TeleOpState;

@@ -1,13 +1,12 @@
 package frc.robot.states;
 
-import frc.robot.statemachine.State;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.DataLogManager;
+import frc.lib.statemachine.RobotStateManager;
+import frc.lib.statemachine.State;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
-import frc.robot.statemachine.RobotStateManager;
 
 public class TestState implements State{
     private String name;

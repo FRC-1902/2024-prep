@@ -1,7 +1,4 @@
-package frc.robot.statemachine;
-
-import java.util.HashMap;
-import java.util.Map;
+package frc.lib.statemachine;
 
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants;

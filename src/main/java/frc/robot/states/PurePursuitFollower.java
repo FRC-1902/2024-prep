@@ -1,6 +1,5 @@
 package frc.robot.states;
 
-import frc.robot.statemachine.State;
 import frc.robot.subsystems.Swerve;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -9,8 +8,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.lib.sensors.IMU;
+import frc.lib.statemachine.RobotStateManager;
+import frc.lib.statemachine.State;
 import frc.robot.Constants;
-import frc.robot.statemachine.RobotStateManager;
 import frc.lib.util.Waypoints;
 
 public class PurePursuitFollower implements State{

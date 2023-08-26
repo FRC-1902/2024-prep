@@ -1,16 +1,16 @@
 package frc.robot.states;
 
-import frc.robot.statemachine.State;
-import frc.robot.statemachine.Controllers.Axis;
-import frc.robot.statemachine.Controllers.Button;
-import frc.robot.statemachine.Controllers.ControllerName;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.lib.statemachine.Controllers;
+import frc.lib.statemachine.Event;
+import frc.lib.statemachine.RobotStateManager;
+import frc.lib.statemachine.State;
+import frc.lib.statemachine.Controllers.Axis;
+import frc.lib.statemachine.Controllers.Button;
+import frc.lib.statemachine.Controllers.ControllerName;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
-import frc.robot.statemachine.Controllers;
-import frc.robot.statemachine.Event;
-import frc.robot.statemachine.RobotStateManager;
 
 public class TeleOpState implements State{
     private String name;

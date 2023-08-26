@@ -1,7 +1,7 @@
 
-package frc.robot.statemachine;
+package frc.lib.statemachine;
 
-import frc.robot.statemachine.Controllers.*;
+import frc.lib.statemachine.Controllers.*;
 
 public class Event {
   public final Action action;

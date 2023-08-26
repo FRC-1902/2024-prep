@@ -11,7 +11,7 @@ import frc.lib.util.Waypoints;
 
 public class WaypointsTest {
     private static final String FILEPATH = System.getProperty("user.dir") + "/src/test/java/pathplanner/generatedCSV/";
-    static final double DELTA = 1e-2;
+    static final double DELTA = 5e-3;
     private Waypoints waypoints;
 
     @BeforeEach
@@ -23,7 +23,7 @@ public class WaypointsTest {
     void shutdown() {}
 
     @Test
-    void facePointTest() {
+    void facePoint() {
         double pos0   = waypoints.facePoint(new Translation2d(0.0, 0.0), new Translation2d(1.0, 0.0)).getDegrees();
         double pos45  = waypoints.facePoint(new Translation2d(1.8, 1.8), new Translation2d(2.0, 2.0)).getDegrees();
         double pos90  = waypoints.facePoint(new Translation2d(0.0, 1.0), new Translation2d(0.0, 1.5)).getDegrees();
@@ -40,8 +40,18 @@ public class WaypointsTest {
     }
 
     @Test
-    void findClosestVelocityTest() {
-        //TODO: write me
+    void findClosestVelocity() {
+        Rotation2d rot = Rotation2d.fromDegrees(0.0);
+        
+        double a = waypoints.findClosestVelocity(new Pose2d(0.0, 0.0, rot));
+        double b = waypoints.findClosestVelocity(new Pose2d(-10.0, -1.0, rot));
+        double c = waypoints.findClosestVelocity(new Pose2d(0.2, 0.2, rot));
+        double d = waypoints.findClosestVelocity(new Pose2d(0.05, 0.15, rot));
+
+        assertEquals(0.0, a, DELTA);
+        assertEquals(0.0, b, DELTA);
+        assertEquals(0.0, c, DELTA);
+        assertEquals(0.917, d, DELTA);
     }
 
     @Test 
@@ -67,8 +77,18 @@ public class WaypointsTest {
     }
 
     @Test
-    void findLookaheadTest() {
-        //TODO: write me
-        
+    void findLookahead() {
+        Rotation2d rot = Rotation2d.fromDegrees(0.0);
+
+        Pose2d a = waypoints.findLookahead(new Pose2d(0.0, 0.0, rot), 1.0);
+        Pose2d b = waypoints.findLookahead(new Pose2d(0.0, 0.0, rot), 0.001);
+        Pose2d c = waypoints.findLookahead(new Pose2d(0.1, 0.1, rot), 0.05);
+
+        assertEquals(0.2, a.getX(), DELTA);
+        assertEquals(0.2, a.getY(), DELTA);
+        assertEquals(0.0, b.getX(), DELTA);
+        assertEquals(0.0, b.getY(), DELTA);
+        assertEquals(0.135, c.getX(), DELTA);
+        assertEquals(0.135, c.getY(), DELTA);
     }
 }
