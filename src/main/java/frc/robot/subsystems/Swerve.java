@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import frc.robot.SwerveModule;
 import frc.lib.sensors.IMU;
 import frc.robot.Constants;
 
@@ -16,6 +15,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -28,6 +31,8 @@ public class Swerve extends SubsystemBase {
     private DoubleLogEntry mod1DriveVel, mod1Angle;
     private DoubleLogEntry mod2DriveVel, mod2Angle;
     private DoubleLogEntry mod3DriveVel, mod3Angle;
+
+    private ShuffleboardTab swerveTab;
 
     private Swerve() {
         imu = IMU.getInstance();
@@ -49,6 +54,21 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
         initializeLogger();
+        initializeSmartDashboard();
+    }
+    
+    private void initializeSmartDashboard() {
+        swerveTab = Shuffleboard.getTab("Swerve");
+        swerveTab.addDouble("Module 0 Velcity", () -> mSwerveMods[0].getState().speedMetersPerSecond)
+            .withWidget(BuiltInWidgets.kGraph);
+            swerveTab.addDouble("Module 0 Desired", () -> mSwerveMods[0].getDesiredSpeed())
+            .withWidget(BuiltInWidgets.kGraph);
+        // swerveTab.addDouble("Module 1", () -> mSwerveMods[1].getState().speedMetersPerSecond)
+        //     .withWidget(BuiltInWidgets.kGraph);
+        // swerveTab.addDouble("Module 2", () -> mSwerveMods[2].getState().speedMetersPerSecond)
+        //     .withWidget(BuiltInWidgets.kGraph);
+        // swerveTab.addDouble("Module 3", () -> mSwerveMods[3].getState().speedMetersPerSecond)
+        //     .withWidget(BuiltInWidgets.kGraph);
     }
 
     private void initializeLogger() {

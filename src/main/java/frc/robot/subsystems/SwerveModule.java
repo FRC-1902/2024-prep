@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.util.ModuleStateOptimizer;
 import frc.lib.util.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil.Usage;
+import frc.robot.Constants;
+import frc.robot.Constants.Swerve;
 
 import com.revrobotics.CANSparkMax;
 import frc.lib.util.CANSparkMaxUtil;
@@ -15,10 +17,11 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-public class SwerveModule {
+public class SwerveModule{
   private int moduleNumber;
   private Rotation2d angleOffset;
   private Rotation2d lastAngle;
+  private double desiredSpeed;
 
   private CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
@@ -60,8 +63,9 @@ public class SwerveModule {
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
   }
-
+  
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
+    desiredSpeed = desiredState.speedMetersPerSecond;
     if(isOpenLoop){
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
       driveMotor.set(percentOutput);
@@ -88,6 +92,10 @@ public class SwerveModule {
 
   public Rotation2d getCanCoder(){
     return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition());
+  }
+
+  public double getDesiredSpeed() {
+    return desiredSpeed;
   }
 
   public void resetToAbsolute(){
@@ -124,10 +132,10 @@ public class SwerveModule {
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
     driveEncoder.setPositionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
-    driveController.setP(Constants.Swerve.angleKP); //TODO: find why this is angleKP, I, and D or fix
-    driveController.setI(Constants.Swerve.angleKI);
-    driveController.setD(Constants.Swerve.angleKD);
-    driveController.setFF(Constants.Swerve.angleKF);
+    driveController.setP(Constants.Swerve.driveKP); //TODO: find why this is angleKP, I, and D or fix
+    driveController.setI(Constants.Swerve.driveKI);
+    driveController.setD(Constants.Swerve.driveKD);
+    driveController.setFF(Constants.Swerve.driveKF);
     driveMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
     driveMotor.burnFlash();
     driveEncoder.setPosition(0.0);

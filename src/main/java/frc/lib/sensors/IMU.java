@@ -1,7 +1,5 @@
 package frc.lib.sensors;
 
-import javax.accessibility.AccessibleExtendedComponent;
-
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 

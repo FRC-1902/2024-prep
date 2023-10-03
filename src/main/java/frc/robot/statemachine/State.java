@@ -10,8 +10,4 @@ public interface State {
   default void enter(State enteredFrom) {
     enter();
   }
-
-  default boolean handleEvent(Event event, RobotStateManager rs){
-    return false;
-  }
 }
