@@ -85,6 +85,7 @@ public class SwerveModule{
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
     desiredSpeed = desiredState.speedMetersPerSecond;
     if(isOpenLoop){
+      // TODO: maybe use feedforward here instead
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
       driveMotor.set(percentOutput);
     }

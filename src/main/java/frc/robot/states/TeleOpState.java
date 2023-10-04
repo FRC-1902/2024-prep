@@ -55,9 +55,9 @@ public class TeleOpState implements State{
 
         //cube controls for better handling, and scale down for softer pre-season movement
         translationVal = Math.pow(translationVal, 3.0);
-        translationVal *= 0.12;
+        translationVal *= 0.5;
         strafeVal = Math.pow(strafeVal, 3.0);
-        strafeVal *= 0.12;
+        strafeVal *= 0.5;
         rotationVal = Math.pow(rotationVal, 3.0);
         rotationVal *= 0.8;
 
@@ -66,7 +66,7 @@ public class TeleOpState implements State{
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             isFieldRelative, 
-            false
+            true
         );
 
         if(controllers.getPressed(ControllerName.DRIVE, Button.Y)) {
