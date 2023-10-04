@@ -54,21 +54,6 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
         initializeLogger();
-        initializeSmartDashboard();
-    }
-    
-    private void initializeSmartDashboard() {
-        swerveTab = Shuffleboard.getTab("Swerve");
-        swerveTab.addDouble("Module 0 Velcity", () -> mSwerveMods[0].getState().speedMetersPerSecond)
-            .withWidget(BuiltInWidgets.kGraph);
-            swerveTab.addDouble("Module 0 Desired", () -> mSwerveMods[0].getDesiredSpeed())
-            .withWidget(BuiltInWidgets.kGraph);
-        // swerveTab.addDouble("Module 1", () -> mSwerveMods[1].getState().speedMetersPerSecond)
-        //     .withWidget(BuiltInWidgets.kGraph);
-        // swerveTab.addDouble("Module 2", () -> mSwerveMods[2].getState().speedMetersPerSecond)
-        //     .withWidget(BuiltInWidgets.kGraph);
-        // swerveTab.addDouble("Module 3", () -> mSwerveMods[3].getState().speedMetersPerSecond)
-        //     .withWidget(BuiltInWidgets.kGraph);
     }
 
     private void initializeLogger() {
