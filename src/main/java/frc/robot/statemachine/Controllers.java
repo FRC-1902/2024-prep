@@ -76,7 +76,41 @@ public class Controllers {
     }
   }
 
-  /**Checks if specified button is depressed
+  /**Checks if specified button has been pressed
+   * @param name Controller name DRIVE/MANIP
+   * @param button Button name
+   * @return boolean if button is pressed.
+   * If controller is specified incorrectly, returns false
+   */
+  public boolean getPressed(ControllerName name, Button b){
+    switch(name){
+    case DRIVE:
+      return driveController.getRawButtonPressed(buttonMap.get(b));
+    case MANIP:
+      return manipController.getRawButtonPressed(buttonMap.get(b));
+    default:
+      return false;
+    }
+  }
+
+  /**Checks if specified button has been released
+   * @param name Controller name DRIVE/MANIP
+   * @param button Button name
+   * @return boolean if button is pressed.
+   * If controller is specified incorrectly, returns false
+   */
+  public boolean getReleased(ControllerName name, Button b){
+    switch(name){
+    case DRIVE:
+      return driveController.getRawButtonReleased(buttonMap.get(b));
+    case MANIP:
+      return manipController.getRawButtonReleased(buttonMap.get(b));
+    default:
+      return false;
+    }
+  }
+
+  /**Checks the value of the specified axis
    * @param name Controller name DRIVE/MANIP
    * @param axis Axis name
    * @return double of axis value, between -1 and 1
@@ -107,24 +141,6 @@ public class Controllers {
       default:
         return 0;
     }
-  }
-
-  public void eventPeriodic(){
-    for(Map.Entry<Enum<Controllers.Button>, Integer> entry : buttonMap.entrySet()) {
-      if(driveController.getRawButtonPressed(entry.getValue())){
-        rs.handleEvent(new Event((Button) entry.getKey(), Action.PRESSED, ControllerName.DRIVE));
-      }
-      if(driveController.getRawButtonReleased(entry.getValue())){
-        rs.handleEvent(new Event((Button) entry.getKey(), Action.RELEASED, ControllerName.DRIVE));
-      }
-      
-      if(manipController.getRawButtonPressed(entry.getValue())){
-        rs.handleEvent(new Event((Button) entry.getKey(), Action.PRESSED, ControllerName.MANIP));
-      }
-      if(manipController.getRawButtonReleased(entry.getValue())){
-        rs.handleEvent(new Event((Button) entry.getKey(), Action.RELEASED, ControllerName.MANIP));
-      }
-      }
   }
 
   public static Controllers getInstance(){

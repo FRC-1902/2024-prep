@@ -74,19 +74,6 @@ public class RobotStateManager{
         loopingState = findState(loopingState.getParent());
       }
     }
-
-    /**
-     * Call me to send controller events to the active state hiearchy
-     * <p>Will be handled by the state that returns true first in the hiearchy</p>
-     * @param event Event objects to send
-     */
-    public void handleEvent(Event event){
-      updateState();
-      State loopingState = currentState;
-      while(loopingState != null && !loopingState.handleEvent(event, this)){
-        loopingState = findState(loopingState.getParent());
-      }
-    }
     
     private State findCommonAncestor(State a, State b){
       State candidateA = a;
