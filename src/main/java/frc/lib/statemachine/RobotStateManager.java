@@ -32,6 +32,10 @@ public class RobotStateManager{
         targetState = null;
 
         enterTo(ancestor, currentState, enteringFrom);
+
+        // handles setting the target on entry condition
+        if(targetState != null) 
+          updateState();
       }
     }
   
@@ -41,6 +45,7 @@ public class RobotStateManager{
      * updates state on the next call of periodic   
      */
     public void setState (String targetName){
+      System.out.println("Target set to " + targetName + " in " + currentState);
       targetState = findState(targetName);
     }
   

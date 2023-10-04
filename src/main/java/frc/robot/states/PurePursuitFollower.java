@@ -54,8 +54,6 @@ public class PurePursuitFollower implements State{
         );
 
         waypoints = new Waypoints(FILEPATH + "TestPath1.csv");
-
-        RobotStateManager.getInstance().setState(parent);
     }
 
     @Override
@@ -71,7 +69,15 @@ public class PurePursuitFollower implements State{
         // exit handling
         double endDistance = waypoints.getEndpoint().getTranslation().getDistance(estimatedPose.getTranslation());
         if(endDistance < Constants.AutoConstants.TARGET_END_DELTA) {
+            swerveSubsystem.drive(
+                new Translation2d(0.0, 0.0),
+                0.0,
+                true,
+                false
+            );
+
             rs.setState(parent);
+            return;
         }
 
         double targetVelocity = waypoints.findClosestVelocity(estimatedPose);

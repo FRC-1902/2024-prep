@@ -6,6 +6,7 @@ import frc.lib.statemachine.Controllers.Button;
 import frc.lib.statemachine.Controllers.ControllerName;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.lib.sensors.IMU;
 import frc.lib.statemachine.Controllers;
 import frc.lib.statemachine.RobotStateManager;
 import frc.robot.Constants;
@@ -65,6 +66,7 @@ public class TeleOpState implements State{
 
         if(controllers.getPressed(ControllerName.DRIVE, Button.Y)) {
             s_Swerve.zeroGyro();
+            System.out.println(IMU.getInstance().getHeading());
         }
     }
 }

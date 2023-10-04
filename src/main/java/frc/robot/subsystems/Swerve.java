@@ -128,6 +128,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro(){
+        // TODO: fixme
         imu.setOffset(imu.getHeading());
     }
 
