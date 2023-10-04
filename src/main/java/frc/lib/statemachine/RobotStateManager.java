@@ -27,10 +27,11 @@ public class RobotStateManager{
         State enteringFrom = currentState;
 
         leaveTo(currentState, ancestor);
-        enterTo(ancestor, targetState, enteringFrom);
-
+        
         currentState = targetState;
         targetState = null;
+
+        enterTo(ancestor, currentState, enteringFrom);
       }
     }
   

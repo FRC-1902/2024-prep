@@ -105,4 +105,12 @@ public class Waypoints {
             targetPosition.getY() - currentPosition.getY()
         );
     }
+
+    /**
+     * Get the desired final pose from waypoints
+     * @return last Pose2d
+     */
+    public Pose2d getEndpoint() {
+        return poseList.get(poseList.size()-1);
+    }
 }

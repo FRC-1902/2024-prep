@@ -91,4 +91,12 @@ public class WaypointsTest {
         assertEquals(0.135, c.getX(), DELTA);
         assertEquals(0.135, c.getY(), DELTA);
     }
+
+    @Test
+    void findEndpoint() {
+        Pose2d endpoint = waypoints.getEndpoint();
+
+        assertEquals(0.2, endpoint.getX(), DELTA);
+        assertEquals(0.2, endpoint.getY(), DELTA);
+    }
 }

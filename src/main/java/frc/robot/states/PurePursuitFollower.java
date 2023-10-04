@@ -1,7 +1,7 @@
 package frc.robot.states;
 
 import frc.robot.subsystems.Swerve;
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,6 +20,7 @@ public class PurePursuitFollower implements State{
     private IMU imu;
     private Swerve swerveSubsystem;
     private Waypoints waypoints;
+    private PIDController anglePID;
 
     private static final String FILEPATH = RobotBase.isReal() ? "/home/lvuser/deploy/pathplanner/generatedCSV/" : 
         System.getProperty("user.dir") + "/src/main/deploy/pathplanner/generatedCSV/";
@@ -29,6 +30,7 @@ public class PurePursuitFollower implements State{
         this.parent = parent;
         imu = IMU.getInstance();
         swerveSubsystem = Swerve.getInstance();
+        anglePID = new PIDController(Constants.AutoConstants.ANGLE_KP, Constants.AutoConstants.ANGLE_KI, Constants.AutoConstants.ANGLE_KD);
     }
     
     @Override
@@ -52,6 +54,8 @@ public class PurePursuitFollower implements State{
         );
 
         waypoints = new Waypoints(FILEPATH + "TestPath1.csv");
+
+        RobotStateManager.getInstance().setState(parent);
     }
 
     @Override
@@ -60,16 +64,20 @@ public class PurePursuitFollower implements State{
     @Override
     public void periodic(RobotStateManager rs) {
         poseEstimator.update(Rotation2d.fromDegrees(imu.getHeading()), swerveSubsystem.getModulePositions());
-        pursuit(poseEstimator.getEstimatedPosition());
+        pursuit(poseEstimator.getEstimatedPosition(), rs);
     }
 
-    private void pursuit(Pose2d estimatedPose) {
-        double searchDistance = 0.1; //TODO: tune and migrate to constants
-        double minimumVelocity = 0.01; // stops deadlocking at 0 velocity //TODO: tune and migrate to consttants
-        
+    private void pursuit(Pose2d estimatedPose, RobotStateManager rs) {
+        // exit handling
+        double endDistance = waypoints.getEndpoint().getTranslation().getDistance(estimatedPose.getTranslation());
+        if(endDistance < Constants.AutoConstants.TARGET_END_DELTA) {
+            rs.setState(parent);
+        }
+
         double targetVelocity = waypoints.findClosestVelocity(estimatedPose);
         Rotation2d targetFacingAngle = waypoints.findClosestPose(estimatedPose).getRotation();
-        Pose2d lookahead = waypoints.findLookahead(estimatedPose, searchDistance);
+        Rotation2d currentFacingAngle = Rotation2d.fromDegrees(imu.getHeading());
+        Pose2d lookahead = waypoints.findLookahead(estimatedPose, Constants.AutoConstants.SEARCH_DISTANCE);
         if(lookahead == null)
             lookahead = waypoints.findClosestPose(estimatedPose);
 
@@ -78,19 +86,25 @@ public class PurePursuitFollower implements State{
 
         // XXX: may need to rexamine later, possibly removing initial acceleration
         targetVelocity = Math.abs(targetVelocity);
-        targetVelocity = Math.max(targetVelocity, minimumVelocity);
+        targetVelocity = Math.max(targetVelocity, Constants.AutoConstants.MIN_VELOCITY);
 
         Translation2d driveTarget = new Translation2d(targetVelocity, driveAngle);
-
+        
         swerveSubsystem.drive(
             driveTarget,
-            0.0, //TODO: implement rotation controller for facingAngle
+            0.0, // angleControl(currentFacingAngle, targetFacingAngle), // TODO: tune angle controller before use
             true,
             false
         );
-        // XXX: ending handling?
 
         logPursuit(estimatedPose, lookahead, driveTarget, targetFacingAngle);
+    }
+
+    private double angleControl(Rotation2d current, Rotation2d target) {
+        Rotation2d error = current.minus(target);
+        double adjustedError = Math.abs(error.getDegrees()) < Math.abs(Constants.AutoConstants.ANGLE_ERROR_LIMIT) ?
+            error.getDegrees() : Constants.AutoConstants.ANGLE_ERROR_LIMIT;
+        return anglePID.calculate(adjustedError, 0.0);
     }
 
     private void logPursuit(Pose2d estimatedPose, Pose2d lookahead, Translation2d driveTarget, Rotation2d targetFacingAngle) {

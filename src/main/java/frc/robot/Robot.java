@@ -9,6 +9,7 @@ import frc.lib.sensors.IMU;
 import frc.lib.statemachine.RobotStateManager;
 import frc.robot.states.AutoState;
 import frc.robot.states.DisabledState;
+import frc.robot.states.PurePursuitFollower;
 import frc.robot.states.TeleOpState;
 import frc.robot.states.TestState;
 
@@ -25,7 +26,8 @@ public class Robot extends TimedRobot {
       new DisabledState("disabled", null),
       new AutoState("auto", null),
       new TeleOpState("teleOp", null),
-      new TestState("test", null)
+      new TestState("test", null),
+      new PurePursuitFollower("purePursuit", "auto")
     );
   }
 

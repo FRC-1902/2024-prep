@@ -23,7 +23,9 @@ public class AutoState implements State{
     }
 
     @Override
-    public void enter() {}
+    public void enter() {
+        RobotStateManager.getInstance().setState("purePursuit");
+    }
 
     @Override
     public void leave() {}

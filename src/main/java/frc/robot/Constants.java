@@ -137,19 +137,15 @@ public class Constants {
         }
     }
 
-    public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-    
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPThetaController = 1;
-    
-        /* Constraint for the motion profilied robot angle controller */
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-            new TrapezoidProfile.Constraints(
-                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    public static final class AutoConstants { 
+        public static final double SEARCH_DISTANCE = 0.1; //TODO: tune me
+        public static final double MIN_VELOCITY = 0.01; // stops deadlocking at 0 m/s on path //TODO: tune me
+        public static final double TARGET_END_DELTA = 0.01; // meters from end waypoint
+
+        // Cascading control into velocity PID, be careful //TODO: tune me
+        public static final double ANGLE_KP = 0.0;
+        public static final double ANGLE_KI = 0.0;
+        public static final double ANGLE_KD = 0.0;
+        public static final double ANGLE_ERROR_LIMIT = 10.0; // cap max angle to avoid instability from cascading control, in degrees
     }
 }
