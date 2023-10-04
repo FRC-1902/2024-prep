@@ -9,11 +9,12 @@ public class IMU {
 
   private final BNO055 bno055Euler = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
     BNO055.vector_type_t.VECTOR_EULER);
-  private final BNO055 bno055Accel = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
-    BNO055.vector_type_t.VECTOR_LINEARACCEL);
+  // only velocity or acceleration can be used at once
+  // private final BNO055 bno055Accel = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
+  //   BNO055.vector_type_t.VECTOR_LINEARACCEL);
 
-  private DoubleLogEntry headingLogger, rollLogger, pitchLogger, turnLogger, offsetLogger, 
-    accelXLogger, accelYLogger, accelZLogger;
+  private DoubleLogEntry headingLogger, rollLogger, pitchLogger, turnLogger, offsetLogger; 
+  // private DoubleLogEntry  accelXLogger, accelYLogger, accelZLogger;
 
   private void initializeLogger() {
     headingLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/heading");
@@ -21,9 +22,9 @@ public class IMU {
     pitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/pitch");
     turnLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/turn");
     offsetLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/offset");
-    accelXLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/accelX");
-    accelYLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/accelY");
-    accelZLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/accelZ");
+    // accelXLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/accelX");
+    // accelYLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/accelY");
+    // accelZLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/accelZ");
 
     offsetLogger.append(bno055Euler.headingOffset);
   }
@@ -38,15 +39,15 @@ public class IMU {
     pitchLogger.append(getPitch());
     turnLogger.append(getTurns());
     
-    double[] linearAccelVec = getLinearAccel();
-    accelXLogger.append(linearAccelVec[0]);
-    accelYLogger.append(linearAccelVec[1]);
-    accelZLogger.append(linearAccelVec[2]);
+    // double[] linearAccelVec = getLinearAccel();
+    // accelXLogger.append(linearAccelVec[0]);
+    // accelYLogger.append(linearAccelVec[1]);
+    // accelZLogger.append(linearAccelVec[2]);
   }
 
-  public double[] getLinearAccel(){
-    return bno055Accel.getVector();
-  }
+  // public double[] getLinearAccel(){
+  //   return bno055Accel.getVector();
+  // }
 
   /**
    * @return returns the imu's x scalar (heading/yaw) representing an angle from 0
