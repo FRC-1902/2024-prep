@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.lib.sensors.IMU;
-import frc.lib.statemachine.Controllers;
 import frc.lib.statemachine.RobotStateManager;
 import frc.robot.states.AutoState;
 import frc.robot.states.DisabledState;
@@ -14,13 +13,11 @@ import frc.robot.states.TeleOpState;
 import frc.robot.states.TestState;
 
 public class Robot extends TimedRobot {
-  private Controllers controllers;
   private RobotStateManager stateMachine;
   private IMU imu;
 
   @Override
   public void robotInit() {
-    controllers = Controllers.getInstance();
     stateMachine = RobotStateManager.getInstance();
     imu = IMU.getInstance();
 
@@ -66,9 +63,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {
-    controllers.eventPeriodic();
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void teleopExit() {}

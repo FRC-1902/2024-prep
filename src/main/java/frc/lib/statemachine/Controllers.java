@@ -1,3 +1,4 @@
+
 package frc.lib.statemachine;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -6,7 +7,6 @@ import frc.robot.Constants;
 public class Controllers {
   private XboxController driveController;
   private XboxController manipController;
-  private RobotStateManager rs;
 
   private static Controllers instance;
 
@@ -38,7 +38,6 @@ public class Controllers {
   }
 
   private Controllers(){
-    rs = RobotStateManager.getInstance();
     driveController = new XboxController(Constants.DRIVE_CONTROLLER_PORT);
     manipController = new XboxController(Constants.MANIP_CONTROLLER_PORT);
   }
@@ -60,7 +59,7 @@ public class Controllers {
     }
   }
 
-  /**Checks if specified button is depressed
+  /**Checks the value of the specified axis
    * @param name Controller name DRIVE/MANIP
    * @param axis Axis name
    * @return double of axis value, between -1 and 1
@@ -74,6 +73,40 @@ public class Controllers {
       return manipController.getRawAxis(a.id);
     default:
       return 0.0;
+    }
+  }
+
+  /**Checks if specified button was pressed since last checked
+   * @param name Controller name DRIVE/MANIP
+   * @param button Button name
+   * @return boolean if button is pressed.
+   * If controller is specified incorrectly, returns false
+   */
+  public boolean getPressed(ControllerName name, Button b){
+    switch(name){
+    case DRIVE:
+      return driveController.getRawButtonPressed(b.id);
+    case MANIP:
+      return manipController.getRawButtonPressed(b.id);
+    default:
+      return false;
+    }
+  }
+
+  /**Checks if specified button was released since last checked
+   * @param name Controller name DRIVE/MANIP
+   * @param button Button name
+   * @return boolean if button is pressed.
+   * If controller is specified incorrectly, returns false
+   */
+  public boolean getReleased(ControllerName name, Button b){
+    switch(name){
+    case DRIVE:
+      return driveController.getRawButtonReleased(b.id);
+    case MANIP:
+      return manipController.getRawButtonReleased(b.id);
+    default:
+      return false;
     }
   }
 
@@ -91,24 +124,6 @@ public class Controllers {
       default:
         return 0;
     }
-  }
-
-  public void eventPeriodic(){
-    for(Button b : Button.values()) {
-      if(driveController.getRawButtonPressed(b.id)){
-        rs.handleEvent(new Event(b, Action.PRESSED, ControllerName.DRIVE));
-      }
-      if(driveController.getRawButtonReleased(b.id)){
-        rs.handleEvent(new Event(b, Action.RELEASED, ControllerName.DRIVE));
-      }
-      
-      if(manipController.getRawButtonPressed(b.id)){
-        rs.handleEvent(new Event(b, Action.PRESSED, ControllerName.MANIP));
-      }
-      if(manipController.getRawButtonReleased(b.id)){
-        rs.handleEvent(new Event(b, Action.RELEASED, ControllerName.MANIP));
-      }
-      }
   }
 
   public static Controllers getInstance(){

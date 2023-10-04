@@ -1,14 +1,13 @@
 package frc.robot.states;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Translation2d;
-import frc.lib.statemachine.Controllers;
-import frc.lib.statemachine.Event;
-import frc.lib.statemachine.RobotStateManager;
 import frc.lib.statemachine.State;
 import frc.lib.statemachine.Controllers.Axis;
 import frc.lib.statemachine.Controllers.Button;
 import frc.lib.statemachine.Controllers.ControllerName;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
+import frc.lib.statemachine.Controllers;
+import frc.lib.statemachine.RobotStateManager;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
@@ -48,6 +47,14 @@ public class TeleOpState implements State{
         double rotationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.RX), Constants.stickDeadband);
         boolean isFieldRelative = !controllers.get(ControllerName.DRIVE, Button.LB);
 
+        //cube controls for better handling, and scale down for softer pre-season movement
+        translationVal = Math.pow(translationVal, 3.0);
+        translationVal *= 0.5;
+        strafeVal = Math.pow(strafeVal, 3.0);
+        strafeVal *= 0.5;
+        rotationVal = Math.pow(rotationVal, 3.0);
+        rotationVal *= 0.8;
+
         /* Drive */
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
@@ -55,14 +62,9 @@ public class TeleOpState implements State{
             isFieldRelative, 
             true
         );
-    }
 
-    @Override
-    public boolean handleEvent(Event event, RobotStateManager rs){
-        if(event.button == Button.Y) {
-            s_Swerve.zeroGyro(); //TODO: test me
-            return true;
+        if(controllers.getPressed(ControllerName.DRIVE, Button.Y)) {
+            s_Swerve.zeroGyro();
         }
-        return false;
     }
 }
