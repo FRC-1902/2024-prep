@@ -43,9 +43,9 @@ public class TeleOpState implements State{
 
     @Override
     public void periodic(RobotStateManager rs) {
-        double translationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LY), Constants.stickDeadband);
-        double strafeVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LX), Constants.stickDeadband);
-        double rotationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.RX), Constants.stickDeadband);
+        double translationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LY), Constants.STICK_DEADBAND);
+        double strafeVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LX), Constants.STICK_DEADBAND);
+        double rotationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.RX), Constants.STICK_DEADBAND);
         boolean isFieldRelative = !controllers.get(ControllerName.DRIVE, Button.LB);
 
         //cube controls for better handling, and scale down for softer pre-season movement
@@ -58,8 +58,8 @@ public class TeleOpState implements State{
 
         /* Drive */
         s_Swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
-            rotationVal * Constants.Swerve.maxAngularVelocity, 
+            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+            rotationVal * Constants.Swerve.MAX_ANGULAR_VELOCITY, 
             isFieldRelative, 
             true
         );

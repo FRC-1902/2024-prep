@@ -6,10 +6,10 @@ import com.revrobotics.CANSparkMaxLowLevel;
 /** Sets motor usage for a Spark Max motor controller */
 public class CANSparkMaxUtil {
   public enum Usage {
-    kAll,
-    kPositionOnly,
-    kVelocityOnly,
-    kMinimal
+    ALL,
+    POSITION_ONLY,
+    VELOCITY_ONLY,
+    MINIMAL
   };
 
   /**
@@ -33,19 +33,19 @@ public class CANSparkMaxUtil {
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 500);
     }
 
-    if (usage == Usage.kAll) {
+    if (usage == Usage.ALL) {
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus3, 50);
-    } else if (usage == Usage.kPositionOnly) {
+    } else if (usage == Usage.POSITION_ONLY) {
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 500);
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus3, 500);
-    } else if (usage == Usage.kVelocityOnly) {
+    } else if (usage == Usage.VELOCITY_ONLY) {
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 500);
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus3, 500);
-    } else if (usage == Usage.kMinimal) {
+    } else if (usage == Usage.MINIMAL) {
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 500);
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 500);
       motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus3, 500);

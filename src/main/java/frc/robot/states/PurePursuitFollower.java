@@ -45,7 +45,7 @@ public class PurePursuitFollower implements State{
 
     @Override
     public void enter() {
-        Rotation2d initialAngle = Rotation2d.fromDegrees(imu.getHeading());
+        Rotation2d initialAngle = imu.getHeading();
         poseEstimator = new SwerveDrivePoseEstimator(
             Constants.Swerve.swerveKinematics, 
             initialAngle, 
@@ -61,7 +61,7 @@ public class PurePursuitFollower implements State{
 
     @Override
     public void periodic(RobotStateManager rs) {
-        poseEstimator.update(Rotation2d.fromDegrees(imu.getHeading()), swerveSubsystem.getModulePositions());
+        poseEstimator.update(imu.getHeading(), swerveSubsystem.getModulePositions());
         pursuit(poseEstimator.getEstimatedPosition(), rs);
     }
 
@@ -82,7 +82,7 @@ public class PurePursuitFollower implements State{
 
         double targetVelocity = waypoints.findClosestVelocity(estimatedPose);
         Rotation2d targetFacingAngle = waypoints.findClosestPose(estimatedPose).getRotation();
-        Rotation2d currentFacingAngle = Rotation2d.fromDegrees(imu.getHeading());
+        Rotation2d currentFacingAngle = imu.getHeading();
         Pose2d lookahead = waypoints.findLookahead(estimatedPose, Constants.AutoConstants.SEARCH_DISTANCE);
         if(lookahead == null)
             lookahead = waypoints.findClosestPose(estimatedPose);
@@ -108,7 +108,7 @@ public class PurePursuitFollower implements State{
 
     private double angleControl(Rotation2d current, Rotation2d target) {
         Rotation2d error = current.minus(target);
-        double adjustedError = Math.abs(error.getDegrees()) < Math.abs(Constants.AutoConstants.ANGLE_ERROR_LIMIT) ?
+        double adjustedError = Math.abs(error.getDegrees()) < Constants.AutoConstants.ANGLE_ERROR_LIMIT ?
             error.getDegrees() : Constants.AutoConstants.ANGLE_ERROR_LIMIT;
         return anglePID.calculate(adjustedError, 0.0);
     }

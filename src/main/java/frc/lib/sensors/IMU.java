@@ -1,7 +1,9 @@
 package frc.lib.sensors;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import frc.robot.Constants;
 
 public class IMU {
 
@@ -14,7 +16,6 @@ public class IMU {
   //   BNO055.vector_type_t.VECTOR_LINEARACCEL);
 
   private DoubleLogEntry headingLogger, rollLogger, pitchLogger, turnLogger, offsetLogger; 
-  // private DoubleLogEntry  accelXLogger, accelYLogger, accelZLogger;
 
   private void initializeLogger() {
     headingLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/heading");
@@ -22,9 +23,6 @@ public class IMU {
     pitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/pitch");
     turnLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/turn");
     offsetLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/offset");
-    // accelXLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/accelX");
-    // accelYLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/accelY");
-    // accelZLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/accelZ");
 
     offsetLogger.append(bno055Euler.headingOffset);
   }
@@ -34,28 +32,18 @@ public class IMU {
   }
 
   public void logPeriodic() {
-    headingLogger.append(getHeading());
+    headingLogger.append(getHeading().getDegrees());
     rollLogger.append(getRoll());
     pitchLogger.append(getPitch());
     turnLogger.append(getTurns());
-    
-    // double[] linearAccelVec = getLinearAccel();
-    // accelXLogger.append(linearAccelVec[0]);
-    // accelYLogger.append(linearAccelVec[1]);
-    // accelZLogger.append(linearAccelVec[2]);
   }
 
-  // public double[] getLinearAccel(){
-  //   return bno055Accel.getVector();
-  // }
-
   /**
-   * @return returns the imu's x scalar (heading/yaw) representing an angle from 0
-   *         to 360 degrees
+   * @return returns the imu's x scalar (heading/yaw) as a Rotation2d object
    */
-  public double getHeading() {
+  public Rotation2d getHeading() {
     double[] xyz = bno055Euler.getVector();
-    return xyz[0];
+    return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]) : Rotation2d.fromDegrees(xyz[0]);
   }
 
   /**
