@@ -141,13 +141,15 @@ public class Constants {
         private AutoConstants() {}
 
         public static final double SEARCH_DISTANCE = 0.1; //TODO: tune me
-        public static final double MIN_VELOCITY = 0.01; // stops deadlocking at 0 m/s on path //TODO: tune me
+        public static final double MIN_VELOCITY = 0.02; // stops deadlocking at 0 m/s on path //TODO: tune me
         public static final double TARGET_END_DELTA = 0.01; // meters from end waypoint
+        public static final double TARGET_ANGLE_DELTA = 0.5;
+        public static final int TARGET_COUNT_AT_SETPIONT = 5; //number of robot loops to maintain at setpoint
 
         // Cascading control into velocity PID, be careful //TODO: tune me
-        public static final double ANGLE_KP = 0.0;
+        public static final double ANGLE_KP = 0.065;
         public static final double ANGLE_KI = 0.0;
         public static final double ANGLE_KD = 0.0;
-        public static final double ANGLE_ERROR_LIMIT = 10.0; // cap max angle to avoid instability from cascading control, in degrees
+        public static final double ANGLE_ERROR_LIMIT = 20.0; // cap max angle to avoid instability from cascading control, in degrees
     }
 }

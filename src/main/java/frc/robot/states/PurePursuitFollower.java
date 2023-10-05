@@ -21,6 +21,7 @@ public class PurePursuitFollower implements State{
     private Swerve swerveSubsystem;
     private Waypoints waypoints;
     private PIDController anglePID;
+    private int countAtSetpoint;
 
     private static final String FILEPATH = RobotBase.isReal() ? "/home/lvuser/deploy/pathplanner/generatedCSV/" : 
         System.getProperty("user.dir") + "/src/main/deploy/pathplanner/generatedCSV/";
@@ -31,6 +32,7 @@ public class PurePursuitFollower implements State{
         imu = IMU.getInstance();
         swerveSubsystem = Swerve.getInstance();
         anglePID = new PIDController(Constants.AutoConstants.ANGLE_KP, Constants.AutoConstants.ANGLE_KI, Constants.AutoConstants.ANGLE_KD);
+        anglePID.setTolerance(Constants.AutoConstants.TARGET_ANGLE_DELTA);
     }
     
     @Override
@@ -54,10 +56,18 @@ public class PurePursuitFollower implements State{
         );
 
         waypoints = new Waypoints(FILEPATH + "TestPath1.csv");
+        countAtSetpoint = 0;
     }
 
     @Override
-    public void leave() {}
+    public void leave() {
+        swerveSubsystem.drive(
+            new Translation2d(0.0, 0.0),
+            0.0,
+            true,
+            false
+        );
+    }
 
     @Override
     public void periodic(RobotStateManager rs) {
@@ -68,16 +78,14 @@ public class PurePursuitFollower implements State{
     private void pursuit(Pose2d estimatedPose, RobotStateManager rs) {
         // exit handling
         double endDistance = waypoints.getEndpoint().getTranslation().getDistance(estimatedPose.getTranslation());
-        if(endDistance < Constants.AutoConstants.TARGET_END_DELTA) {
-            swerveSubsystem.drive(
-                new Translation2d(0.0, 0.0),
-                0.0,
-                true,
-                false
-            );
-
-            rs.setState(parent);
-            return;
+        if(endDistance < Constants.AutoConstants.TARGET_END_DELTA && anglePID.atSetpoint()) { 
+            countAtSetpoint += 1;
+            if (countAtSetpoint >= Constants.AutoConstants.TARGET_COUNT_AT_SETPIONT) {
+                rs.setState(parent);
+                return;
+            }
+        } else {
+            countAtSetpoint = 0;
         }
 
         double targetVelocity = waypoints.findClosestVelocity(estimatedPose);
@@ -98,7 +106,7 @@ public class PurePursuitFollower implements State{
         
         swerveSubsystem.drive(
             driveTarget,
-            0.0, // angleControl(currentFacingAngle, targetFacingAngle), // TODO: tune angle controller before use
+            angleControl(currentFacingAngle, targetFacingAngle),
             true,
             false
         );
@@ -109,7 +117,7 @@ public class PurePursuitFollower implements State{
     private double angleControl(Rotation2d current, Rotation2d target) {
         Rotation2d error = current.minus(target);
         double adjustedError = Math.abs(error.getDegrees()) < Constants.AutoConstants.ANGLE_ERROR_LIMIT ?
-            error.getDegrees() : Constants.AutoConstants.ANGLE_ERROR_LIMIT;
+            error.getDegrees() : Constants.AutoConstants.ANGLE_ERROR_LIMIT * Math.signum(error.getDegrees());
         return anglePID.calculate(adjustedError, 0.0);
     }
 

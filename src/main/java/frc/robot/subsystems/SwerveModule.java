@@ -151,7 +151,7 @@ public class SwerveModule{
     driveMotor.setIdleMode(Constants.Swerve.DRIVE_NEUTRAL_MODE);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.DRIVE_CONVERSION_VELOCITY_FACTOR);
     driveEncoder.setPositionConversionFactor(Constants.Swerve.DRIVE_CONVERSION_POSITION_FACTOR);
-    driveController.setP(Constants.Swerve.DRIVE_KP); //TODO: find why this is angleKP, I, and D or fix
+    driveController.setP(Constants.Swerve.DRIVE_KP);
     driveController.setI(Constants.Swerve.DRIVE_KI);
     driveController.setD(Constants.Swerve.DRIVE_KD);
     driveController.setFF(Constants.Swerve.DRIVE_KF);

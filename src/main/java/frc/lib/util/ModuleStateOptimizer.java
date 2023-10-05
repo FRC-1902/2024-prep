@@ -20,7 +20,7 @@ public class ModuleStateOptimizer {
     double delta = targetAngle - currentAngle.getDegrees();
     if (Math.abs(delta) > 90){
         targetSpeed = -targetSpeed;
-        targetAngle = delta > 90 ? (targetAngle - 180) : (targetAngle + 180);
+        targetAngle = delta > 90 ? (targetAngle -= 180) : (targetAngle += 180);
     }        
     return new SwerveModuleState(targetSpeed, Rotation2d.fromDegrees(targetAngle));
   }
