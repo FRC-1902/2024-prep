@@ -5,34 +5,26 @@ import frc.robot.Constants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
     private static Swerve instance;
-    private SwerveDriveOdometry swerveOdometry;
+    private SwerveDrivePoseEstimator swerveOdometry;
     private SwerveModule[] mSwerveMods;
     private IMU imu;
     private DoubleLogEntry mod0DriveVel, mod0Angle;
     private DoubleLogEntry mod1DriveVel, mod1Angle;
     private DoubleLogEntry mod2DriveVel, mod2Angle;
     private DoubleLogEntry mod3DriveVel, mod3Angle;
-
-    private ShuffleboardTab swerveTab;
 
     private Swerve() {
         imu = IMU.getInstance();
@@ -52,8 +44,13 @@ public class Swerve extends SubsystemBase {
         Timer.delay(1.0); //TODO: see if I still need this with rev
         resetModulesToAbsolute();
 
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
-        initializeLogger();
+        swerveOdometry = new SwerveDrivePoseEstimator(
+            Constants.Swerve.swerveKinematics, 
+            imu.getHeading(), 
+            getModulePositions(), 
+            new Pose2d(0.0, 0.0, imu.getHeading())
+        );
+        // initializeLogger();
     }
 
     private void initializeLogger() {
@@ -86,14 +83,14 @@ public class Swerve extends SubsystemBase {
                                     translation.getX(), 
                                     translation.getY(), 
                                     rotation, 
-                                    getYaw()
+                                    imu.getHeading()
                                 )
                                 : new ChassisSpeeds(
                                     translation.getX(), 
                                     translation.getY(), 
                                     rotation)
                                 );
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.MAX_SPEED);
         
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
@@ -102,7 +99,7 @@ public class Swerve extends SubsystemBase {
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.MAX_SPEED);
         
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(desiredStates[mod.getModuleNumber()], false);
@@ -110,11 +107,11 @@ public class Swerve extends SubsystemBase {
     }    
 
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return swerveOdometry.getEstimatedPosition();
     }
 
     public void resetOdometry(Pose2d pose) {
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        swerveOdometry.resetPosition(imu.getHeading(), getModulePositions(), pose);
     }
 
     public SwerveModuleState[] getModuleStates(){
@@ -134,11 +131,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro(){
-        imu.setOffset(imu.getHeading());
-    }
-
-    public Rotation2d getYaw() {
-        return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - imu.getHeading()) : Rotation2d.fromDegrees(imu.getHeading());
+        // TODO: fixme
+        imu.setOffset(imu.getHeading().getDegrees());
     }
 
     public void resetModulesToAbsolute(){
@@ -149,7 +143,7 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        swerveOdometry.update(getYaw(), getModulePositions());  
+        swerveOdometry.update(imu.getHeading(), getModulePositions());  
 
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.getModuleNumber() + " Cancoder", mod.getCanCoder().getDegrees());

@@ -1,4 +1,4 @@
-package frc.robot.statemachine;
+package frc.lib.statemachine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,10 +27,15 @@ public class RobotStateManager{
         State enteringFrom = currentState;
 
         leaveTo(currentState, ancestor);
-        enterTo(ancestor, targetState, enteringFrom);
-
+        
         currentState = targetState;
         targetState = null;
+
+        enterTo(ancestor, currentState, enteringFrom);
+
+        // handles setting the target on entry condition
+        if(targetState != null) 
+          updateState();
       }
     }
   
@@ -40,6 +45,7 @@ public class RobotStateManager{
      * updates state on the next call of periodic   
      */
     public void setState (String targetName){
+      System.out.println("Target set to " + targetName + " in " + currentState);
       targetState = findState(targetName);
     }
   

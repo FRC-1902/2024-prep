@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class ModuleStateOptimizer {
+  private ModuleStateOptimizer() {}
 
   /**
    * Minimize the change in heading the desired swerve module state would require by potentially

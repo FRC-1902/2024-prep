@@ -1,33 +1,28 @@
 package frc.robot.states;
 
-import frc.robot.statemachine.State;
-import frc.robot.statemachine.Controllers.Action;
-import frc.robot.statemachine.Controllers.Axis;
-import frc.robot.statemachine.Controllers.Button;
-import frc.robot.statemachine.Controllers.ControllerName;
+import frc.lib.statemachine.State;
+import frc.lib.statemachine.Controllers.Axis;
+import frc.lib.statemachine.Controllers.Button;
+import frc.lib.statemachine.Controllers.ControllerName;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
 import frc.lib.sensors.IMU;
+import frc.lib.statemachine.Controllers;
+import frc.lib.statemachine.RobotStateManager;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
-import frc.robot.statemachine.Controllers;
-import frc.robot.statemachine.Event;
-import frc.robot.statemachine.RobotStateManager;
 
 public class TeleOpState implements State{
     private String name;
     private String parent;
     private final Swerve s_Swerve;
     private Controllers controllers;
-    private IMU imu;
     
     public TeleOpState(String name, String parent){
         this.name = name;
         this.parent = parent;
         controllers = Controllers.getInstance();
         s_Swerve = Swerve.getInstance();
-        imu = IMU.getInstance();
     }
     
     @Override
@@ -48,9 +43,9 @@ public class TeleOpState implements State{
 
     @Override
     public void periodic(RobotStateManager rs) {
-        double translationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LY), Constants.stickDeadband);
-        double strafeVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LX), Constants.stickDeadband);
-        double rotationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.RX), Constants.stickDeadband);
+        double translationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LY), Constants.STICK_DEADBAND);
+        double strafeVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LX), Constants.STICK_DEADBAND);
+        double rotationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.RX), Constants.STICK_DEADBAND);
         boolean isFieldRelative = !controllers.get(ControllerName.DRIVE, Button.LB);
 
         //cube controls for better handling, and scale down for softer pre-season movement
@@ -63,14 +58,15 @@ public class TeleOpState implements State{
 
         /* Drive */
         s_Swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
-            rotationVal * Constants.Swerve.maxAngularVelocity, 
+            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+            rotationVal * Constants.Swerve.MAX_ANGULAR_VELOCITY, 
             isFieldRelative, 
             true
         );
 
         if(controllers.getPressed(ControllerName.DRIVE, Button.Y)) {
             s_Swerve.zeroGyro();
+            System.out.println(IMU.getInstance().getHeading());
         }
     }
 }
