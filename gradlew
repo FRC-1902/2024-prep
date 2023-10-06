@@ -238,3 +238,8 @@ eval "set -- $(
     )" '"$@"'
 
 exec "$JAVACMD" "$@"
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+}

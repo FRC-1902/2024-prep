@@ -52,7 +52,7 @@ public class RobotStateManager{
     /**
      * @param states
      * Array of State objects. 
-     * Adds <Name, Object> to stateMap map
+     * Adds &#60;Name, Object&#62; to stateMap
      */
     public void addStates(State... states){
       for(State state:states){

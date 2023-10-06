@@ -109,7 +109,7 @@ public class IMU {
   }
 
   /**
-   * @reutrn imu instance
+   * @return imu instance
    */
   public static IMU getInstance() {
     if (instance == null) {

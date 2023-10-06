@@ -44,7 +44,7 @@ public class Controllers {
 
   /**Checks if specified button is depressed
    * @param name Controller name DRIVE/MANIP
-   * @param button Button name
+   * @param b Button name
    * @return boolean if button is pressed.
    * If controller is specified incorrectly, returns false
    */
@@ -61,7 +61,7 @@ public class Controllers {
 
   /**Checks the value of the specified axis
    * @param name Controller name DRIVE/MANIP
-   * @param axis Axis name
+   * @param a Axis name
    * @return double of axis value, between -1 and 1
    * If controller is specified incorrectly, returns 0
    */
@@ -78,7 +78,7 @@ public class Controllers {
 
   /**Checks if specified button was pressed since last checked
    * @param name Controller name DRIVE/MANIP
-   * @param button Button name
+   * @param b Button name
    * @return boolean if button is pressed.
    * If controller is specified incorrectly, returns false
    */
@@ -95,7 +95,7 @@ public class Controllers {
 
   /**Checks if specified button was released since last checked
    * @param name Controller name DRIVE/MANIP
-   * @param button Button name
+   * @param b Button name
    * @return boolean if button is pressed.
    * If controller is specified incorrectly, returns false
    */
