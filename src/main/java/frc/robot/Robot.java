@@ -6,78 +6,89 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.lib.sensors.IMU;
-import frc.lib.statemachine.RobotStateManager;
-import frc.robot.states.AutoState;
-import frc.robot.states.DisabledState;
-import frc.robot.states.PurePursuitFollower;
-import frc.robot.states.TeleOpState;
-import frc.robot.states.TestState;
+import frc.lib.util.OperationMode;
+import frc.robot.modes.AutoMode;
+import frc.robot.modes.DisabledMode;
+import frc.robot.modes.TeleOpMode;
+import frc.robot.modes.TestMode;
 
 public class Robot extends TimedRobot {
-  private RobotStateManager stateMachine;
   private IMU imu;
+
+  private OperationMode disabledMode, autoMode, teleOpMode, testMode;
 
   @Override
   public void robotInit() {
-    stateMachine = RobotStateManager.getInstance();
     imu = IMU.getInstance();
 
-    stateMachine.addStates(
-      new DisabledState("disabled", null),
-      new AutoState("auto", null),
-      new TeleOpState("teleOp", null),
-      new TestState("test", null),
-      new PurePursuitFollower("purePursuit", "auto")
-    );
+    disabledMode = new DisabledMode();
+    autoMode = new AutoMode();
+    teleOpMode = new TeleOpMode();
+    testMode = new TestMode();
   }
 
   @Override
   public void robotPeriodic() {
-    stateMachine.periodic();
     imu.logPeriodic();
   }
 
   @Override
   public void disabledInit() {
-    stateMachine.setState("disabled");
+    disabledMode.enter();
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    disabledMode.periodic();
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    disabledMode.exit();
+  }
 
   @Override
   public void autonomousInit() {
-    stateMachine.setState("auto");
+    autoMode.enter();
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    autoMode.periodic();
+  }
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+    autoMode.exit();
+  }
 
   @Override
   public void teleopInit() {
-    stateMachine.setState("teleOp");
+    teleOpMode.enter();
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    teleOpMode.periodic();
+  }
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+    teleOpMode.exit();
+  }
 
   @Override
   public void testInit() {
-    stateMachine.setState("test");
+    testMode.enter();
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    testMode.periodic();
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+    testMode.exit();
+  }
 }
