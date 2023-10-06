@@ -15,14 +15,18 @@ public class Waypoints {
     private List<Pose2d> poseList;
     private List<Double> velocityList;
 
+    /**
+     * Generate waypoints from .csv file
+     * @param fileName
+     */
     public Waypoints(String fileName) {
         poseList = new ArrayList<>();
         velocityList = new ArrayList<>();
 
-        parseCSV(fileName);
+        parseCSVFile(fileName);
     }
 
-    private void parseCSV(String fileName) {
+    private void parseCSVFile(String fileName) {
         try (BufferedReader br = Files.newBufferedReader(Paths.get(fileName))) {
             final String DELIMITER = ",";
             

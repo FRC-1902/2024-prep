@@ -19,15 +19,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    stateMachine = RobotStateManager.getInstance();
+    stateMachine = new RobotStateManager();
     imu = IMU.getInstance();
 
     stateMachine.addStates(
-      new DisabledState("disabled", null),
-      new AutoState("auto", null),
-      new TeleOpState("teleOp", null),
-      new TestState("test", null),
-      new PurePursuitFollower("purePursuit", "auto")
+      new DisabledState("disabled", null, stateMachine),
+      new AutoState("auto", null, stateMachine),
+      new TeleOpState("teleOp", null, stateMachine),
+      new TestState("test", null, stateMachine),
+      new PurePursuitFollower("purePursuit", "auto", stateMachine)
     );
   }
 

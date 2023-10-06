@@ -10,7 +10,6 @@ public class RobotStateManager{
     private State currentState;
     private State targetState;
     private Map<String, State> stateMap;
-    private static RobotStateManager instance = null;
   
     public RobotStateManager(){
       currentState = null;
@@ -76,7 +75,7 @@ public class RobotStateManager{
       updateState();
       State loopingState = currentState;
       while(loopingState!=null){
-        loopingState.periodic(this);
+        loopingState.periodic();
         loopingState = findState(loopingState.getParent());
       }
     }
@@ -124,15 +123,5 @@ public class RobotStateManager{
 
     public State findState(String name) {
       return stateMap.get(name);
-    }
-
-    /**
-     * @return RobotStateManager instance
-    */
-    public static RobotStateManager getInstance(){
-      if(instance == null){
-        instance = new RobotStateManager();
-      }
-      return instance;
     }
 }

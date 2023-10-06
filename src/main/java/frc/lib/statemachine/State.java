@@ -5,7 +5,7 @@ public interface State {
   String getParent();
   void enter();
   void leave();
-  void periodic(RobotStateManager rs);
+  void periodic();
 
   default void enter(State enteredFrom) {
     enter();

@@ -10,17 +10,22 @@ import frc.lib.sensors.IMU;
 import frc.lib.statemachine.Controllers;
 import frc.lib.statemachine.RobotStateManager;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Swerve;
 
 public class TeleOpState implements State{
     private String name;
     private String parent;
+    private RobotStateManager rs;
+
     private final Swerve s_Swerve;
     private Controllers controllers;
     
-    public TeleOpState(String name, String parent){
+    public TeleOpState(String name, String parent, RobotStateManager rs){
         this.name = name;
         this.parent = parent;
+        this.rs = rs;
+
         controllers = Controllers.getInstance();
         s_Swerve = Swerve.getInstance();
     }
@@ -42,7 +47,7 @@ public class TeleOpState implements State{
     public void leave() {}
 
     @Override
-    public void periodic(RobotStateManager rs) {
+    public void periodic() {
         double translationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LY), Constants.STICK_DEADBAND);
         double strafeVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.LX), Constants.STICK_DEADBAND);
         double rotationVal = MathUtil.applyDeadband(-controllers.get(ControllerName.DRIVE, Axis.RX), Constants.STICK_DEADBAND);

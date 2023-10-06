@@ -6,10 +6,12 @@ import frc.lib.statemachine.State;
 public class AutoState implements State{
     private String name;
     private String parent;
+    private RobotStateManager rs;
     
-    public AutoState(String name, String parent){
+    public AutoState(String name, String parent, RobotStateManager rs){
         this.name = name;
         this.parent = parent;
+        this.rs = rs;
     }
     
     @Override
@@ -24,12 +26,12 @@ public class AutoState implements State{
 
     @Override
     public void enter() {
-        RobotStateManager.getInstance().setState("purePursuit");
+        rs.setState("purePursuit");
     }
 
     @Override
     public void leave() {}
 
     @Override
-    public void periodic(RobotStateManager rs) {}
+    public void periodic() {}
 }
