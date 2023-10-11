@@ -5,12 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.lib.sensors.IMU;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.OperationMode;
 import frc.robot.modes.AutoMode;
 import frc.robot.modes.DisabledMode;
 import frc.robot.modes.TeleOpMode;
 import frc.robot.modes.TestMode;
+import frc.robot.subsystems.IMU;
 
 public class Robot extends TimedRobot {
   private IMU imu;
@@ -29,7 +30,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    imu.logPeriodic();
+    CommandScheduler.getInstance().run();
   }
 
   @Override

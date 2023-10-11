@@ -1,6 +1,4 @@
-package frc.robot.subsystems;
-
-import java.util.ArrayDeque;
+package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -8,43 +6,39 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
-import frc.lib.sensors.IMU;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.IMU;
+import frc.robot.subsystems.Swerve;
 import frc.lib.util.Waypoints;
 
-public class PurePursuitFollower{
+public class PurePursuitCommand extends CommandBase{
     private IMU imu;
     private Swerve swerveSubsystem;
 
     private SwerveDrivePoseEstimator poseEstimator;
     private PIDController anglePID;
     private int countAtSetpoint;
-    private boolean isFinished;
 
-    private ArrayDeque<Waypoints> waypointsQueue;
-    private Waypoints activeWaypoints;
+    private Waypoints waypoints;
     
-    public PurePursuitFollower(){
+    /**
+     * Pathing command factory
+     * @param waypoints waypoints path to follow
+     */
+    public PurePursuitCommand(Waypoints waypoints){
+        this.waypoints = waypoints;
         imu = IMU.getInstance();
         swerveSubsystem = Swerve.getInstance();
         anglePID = new PIDController(Constants.AutoConstants.ANGLE_KP, Constants.AutoConstants.ANGLE_KI, Constants.AutoConstants.ANGLE_KD);
         anglePID.setTolerance(Constants.AutoConstants.TARGET_ANGLE_DELTA);
-        isFinished = true;
-        waypointsQueue = new ArrayDeque<>();
-    }
-
-    public void queueWaypoint(Waypoints newWaypoint) {
-        waypointsQueue.add(newWaypoint);
     }
 
     /**
      * Call to activate the next waypoint in the queue
      */
-    public void start() {
-        if (waypointsQueue.isEmpty()) {
-            return;
-        }
-
+    @Override
+    public void initialize() {
         Rotation2d initialAngle = imu.getHeading();
         poseEstimator = new SwerveDrivePoseEstimator(
             Constants.Swerve.swerveKinematics, 
@@ -53,41 +47,53 @@ public class PurePursuitFollower{
             new Pose2d(0.0, 0.0, initialAngle)
         );
 
-        activeWaypoints = waypointsQueue.poll();
         countAtSetpoint = 0;
-        isFinished = false;
 
         DataLogManager.log("Starting Next Path");
     }
 
     /**
-     * Stops the drivetrain and sets isFinished to true
+     * Stops the drivetrain
      */
-    private void leave() {
+    @Override 
+    public void end(boolean wasInterrupted) {
         swerveSubsystem.drive(
             new Translation2d(0.0, 0.0),
             0.0,
             true,
             false
         );
-        
-        isFinished = true;
 
-        DataLogManager.log("Finished Queued Path");
+        if (!wasInterrupted) {
+            DataLogManager.log("Finished Queued Path");
+        } else {
+            DataLogManager.log("Path Was Interrupted");
+        }
     }
 
+    @Override
     public boolean isFinished() {
-        return isFinished;
+        double endDistance = waypoints.getEndpoint().getTranslation().getDistance(
+            poseEstimator.getEstimatedPosition().getTranslation()
+        );
+        if(endDistance < Constants.AutoConstants.TARGET_END_DELTA && anglePID.atSetpoint()) { 
+            countAtSetpoint += 1;
+            if (countAtSetpoint >= Constants.AutoConstants.TARGET_COUNT_AT_SETPIONT) {
+                return true;
+            }
+        } else {
+            countAtSetpoint = 0;
+        }
+        return false;
     }
 
     /**
      * Call every robot loop until finished
      */
-    public void periodic() {
-        if (!isFinished) {
-            poseEstimator.update(imu.getHeading(), swerveSubsystem.getModulePositions());
-            pursuit(poseEstimator.getEstimatedPosition());
-        }
+    @Override
+    public void execute() {
+        poseEstimator.update(imu.getHeading(), swerveSubsystem.getModulePositions());
+        pursuit(poseEstimator.getEstimatedPosition());
     }
 
     /**
@@ -95,28 +101,16 @@ public class PurePursuitFollower{
      * @param estimatedPose
      */
     private void pursuit(Pose2d estimatedPose) {
-        // exit handling
-        double endDistance = activeWaypoints.getEndpoint().getTranslation().getDistance(estimatedPose.getTranslation());
-        if(endDistance < Constants.AutoConstants.TARGET_END_DELTA && anglePID.atSetpoint() || isFinished) { 
-            countAtSetpoint += 1;
-            if (countAtSetpoint >= Constants.AutoConstants.TARGET_COUNT_AT_SETPIONT || isFinished) {
-                leave();
-                return;
-            }
-        } else {
-            countAtSetpoint = 0;
-        }
-
         // get targets
-        double targetVelocity = activeWaypoints.findClosestVelocity(estimatedPose);
-        Rotation2d targetFacingAngle = activeWaypoints.findClosestPose(estimatedPose).getRotation();
+        double targetVelocity = waypoints.findClosestVelocity(estimatedPose);
+        Rotation2d targetFacingAngle = waypoints.findClosestPose(estimatedPose).getRotation();
         Rotation2d currentFacingAngle = imu.getHeading();
-        Pose2d lookahead = activeWaypoints.findLookahead(estimatedPose, Constants.AutoConstants.SEARCH_DISTANCE);
+        Pose2d lookahead = waypoints.findLookahead(estimatedPose, Constants.AutoConstants.SEARCH_DISTANCE);
         if(lookahead == null)
-            lookahead = activeWaypoints.findClosestPose(estimatedPose);
+            lookahead = waypoints.findClosestPose(estimatedPose);
 
         // rotation between current and target
-        Rotation2d driveAngle = activeWaypoints.facePoint(estimatedPose.getTranslation(), lookahead.getTranslation());
+        Rotation2d driveAngle = waypoints.facePoint(estimatedPose.getTranslation(), lookahead.getTranslation());
 
         // XXX: may need to rexamine later, possibly removing initial acceleration from waypoint generation
         targetVelocity = Math.abs(targetVelocity);

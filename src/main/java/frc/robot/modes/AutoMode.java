@@ -1,35 +1,23 @@
 package frc.robot.modes;
 
-import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.subsystems.PurePursuitFollower;
 import frc.lib.util.OperationMode;
-import frc.lib.util.Waypoints;
+import frc.robot.AutoSelector;
 
 public class AutoMode implements OperationMode{
-    private PurePursuitFollower pathing;
-    private static final String CSV_FILEPATH = RobotBase.isReal() ? "/home/lvuser/deploy/pathplanner/generatedCSV/" : 
-        System.getProperty("user.dir") + "/src/main/deploy/pathplanner/generatedCSV/";
+    AutoSelector autoSelector;
 
     public AutoMode(){
-        pathing = new PurePursuitFollower();
+        autoSelector = new AutoSelector();
     }
 
     @Override
     public void enter() {
-        pathing.queueWaypoint(
-            new Waypoints(CSV_FILEPATH + "TestPath1.csv")
-        );
+        autoSelector.getSelectedCommand().schedule();
     }
 
     @Override
     public void exit() {}
 
     @Override
-    public void periodic() {
-        if (!pathing.isFinished()) {
-            pathing.periodic();
-        } else {
-            pathing.start();
-        }
-    }
+    public void periodic() {}
 }
