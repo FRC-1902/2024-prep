@@ -30,7 +30,7 @@ public class IMU extends SubsystemBase{
     turnLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/turn");
     offsetLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/offset");
 
-    offsetLogger.append(bno055Euler.headingOffset);
+    offsetLogger.append(offset.getDegrees());
   }
 
   @Override

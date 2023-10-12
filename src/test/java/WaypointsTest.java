@@ -93,7 +93,7 @@ public class WaypointsTest {
     }
 
     @Test
-    void findEndpoint() {
+    void getEndpoint() {
         Pose2d endpoint = waypoints.getEndpoint();
 
         assertEquals(0.2, endpoint.getX(), DELTA);
