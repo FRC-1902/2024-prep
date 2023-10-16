@@ -19,8 +19,8 @@ public class IMU extends SubsystemBase{
   private Rotation2d offset;
 
   private IMU() {
-    initializeLogger();
     offset = Rotation2d.fromDegrees(0);
+    initializeLogger();
   }
 
   private void initializeLogger() {

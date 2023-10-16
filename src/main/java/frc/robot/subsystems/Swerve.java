@@ -53,6 +53,13 @@ public class Swerve extends SubsystemBase {
         // TODO: use advantage kit
     }
 
+    /**
+     * Drive the swerve drive by inputing velocities, and specifying control modes
+     * @param translation X and Y velocities as Translation2D object (a velocity vector)
+     * @param rotation angular velocity
+     * @param fieldRelative set to drive relative to the robot or relative to the field
+     * @param isOpenLoop
+     */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(
