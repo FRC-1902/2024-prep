@@ -1,10 +1,11 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.IMU;
@@ -22,6 +23,8 @@ public class PurePursuitCommand extends CommandBase{
 
     private Waypoints waypoints;
     private Pose2d startingPose;
+
+    private static final String LOG_KEY = "Pathing";
     
     /**
      * Pathing command factory
@@ -36,7 +39,7 @@ public class PurePursuitCommand extends CommandBase{
     }
 
     /**
-     * Call to activate the next waypoint in the queue
+     * Call to activate the next waypoint
      */
     @Override
     public void initialize() {
@@ -44,7 +47,7 @@ public class PurePursuitCommand extends CommandBase{
 
         countAtSetpoint = 0;
 
-        DataLogManager.log("Starting Next Path");
+        Logger.recordOutput(LOG_KEY, "Starting Next Path");
     }
 
     /**
@@ -60,9 +63,9 @@ public class PurePursuitCommand extends CommandBase{
         );
 
         if (!wasInterrupted) {
-            DataLogManager.log("Finished Queued Path");
+            Logger.recordOutput(LOG_KEY, "Finished Queued Path");
         } else {
-            DataLogManager.log("Path Was Interrupted");
+            Logger.recordOutput(LOG_KEY, "Path Was Interrupted");
         }
     }
 

@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.sensors.BNO055;
 import frc.robot.Constants;
@@ -15,7 +16,6 @@ public class IMU extends SubsystemBase{
   private final BNO055 bno055Euler = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
     BNO055.vector_type_t.VECTOR_EULER);
 
-  private DoubleLogEntry headingLogger, rollLogger, pitchLogger, turnLogger, offsetLogger; 
   private Rotation2d offset;
 
   private IMU() {
@@ -24,21 +24,19 @@ public class IMU extends SubsystemBase{
   }
 
   private void initializeLogger() {
-    headingLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/heading");
-    rollLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/roll");
-    pitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/pitch");
-    turnLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/turn");
-    offsetLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/offset");
-
-    offsetLogger.append(offset.getDegrees());
+    Logger.recordOutput("IMU heading", getHeading().getDegrees());
+    Logger.recordOutput("IMU roll", getRoll());
+    Logger.recordOutput("IMU pitch", getPitch());
+    Logger.recordOutput("IMU turn", getTurns());
+    Logger.recordOutput("IMU offset", offset.getDegrees());
   }
 
   @Override
   public void periodic() {
-    headingLogger.append(getHeading().getDegrees());
-    rollLogger.append(getRoll());
-    pitchLogger.append(getPitch());
-    turnLogger.append(getTurns());
+    Logger.recordOutput("IMU heading", getHeading().getDegrees());
+    Logger.recordOutput("IMU roll", getRoll());
+    Logger.recordOutput("IMU pitch", getPitch());
+    Logger.recordOutput("IMU turn", getTurns());
   }
 
   /**
@@ -79,7 +77,7 @@ public class IMU extends SubsystemBase{
    */
   public void setOffset(Rotation2d offset) {
     this.offset = offset;
-    offsetLogger.append(offset.getDegrees());
+    Logger.recordOutput("IMU offset", offset.getDegrees());
   }
 
   /**

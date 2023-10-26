@@ -4,7 +4,14 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.util.OperationMode;
 import frc.robot.modes.AutoMode;
@@ -13,13 +20,31 @@ import frc.robot.modes.TeleOpMode;
 import frc.robot.modes.TestMode;
 import frc.robot.subsystems.IMU;
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private IMU imu;
+  private PowerDistribution pdh;
 
   private OperationMode disabledMode, autoMode, teleOpMode, testMode;
 
   @Override
   public void robotInit() {
+    Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+
+    if (isReal()) {
+      // TODO: set USB stick
+      Logger.addDataReceiver(new WPILOGWriter("/U")); // Log to a USB stick
+      // Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      pdh = new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+    } else {
+      setUseTiming(false); // Run as fast as possible
+      String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+      Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+      Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+    }
+
+    // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
+    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+
     imu = IMU.getInstance();
 
     disabledMode = new DisabledMode();

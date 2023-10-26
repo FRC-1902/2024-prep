@@ -522,8 +522,8 @@ public class BNO055 {
 		/* Convert the value to an appropriate range (section 3.6.4) */
 		/* and assign the value to the Vector type */
 		switch(requestedVectorType) {
-		case VECTOR_MAGNETOMETER:
-			/* 1uT = 16 LSB */
+		case VECTOR_EULER: /* 1 degree = 16 LSB */
+		case VECTOR_MAGNETOMETER: /* 1uT = 16 LSB */
 			pos[0] = ((double)x)/16.0;
 			pos[1] = ((double)y)/16.0;
 			pos[2] = ((double)z)/16.0;
@@ -533,12 +533,6 @@ public class BNO055 {
 			pos[0] = ((double)x)/900.0;
 			pos[1] = ((double)y)/900.0;
 			pos[2] = ((double)z)/900.0;
-			break;
-		case VECTOR_EULER:
-			/* 1 degree = 16 LSB */
-			pos[0] = ((double)x)/16.0;
-			pos[1] = ((double)y)/16.0;
-			pos[2] = ((double)z)/16.0;
 			break;
 		case VECTOR_ACCELEROMETER:
 		case VECTOR_LINEARACCEL:
