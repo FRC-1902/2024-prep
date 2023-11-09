@@ -5,6 +5,9 @@ import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -42,15 +45,10 @@ public class Swerve extends SubsystemBase {
             getModulePositions(), 
             new Pose2d(0.0, 0.0, imu.getHeading())
         );
-        // initializeLogger();
-    }
-
-    private void initializeLogger() {
-        // TODO: use advantage kit
     }
 
     private void logPeriodic() {
-        // TODO: use advantage kit
+        Logger.recordOutput("Swerve Estimated Pose", swerveOdometry.getEstimatedPosition());
     }
 
     /**
@@ -79,6 +77,8 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
         }
+
+        Logger.recordOutput("Swerve Desired Module States", swerveModuleStates);
     }    
 
     /* Used by SwerveControllerCommand in Auto */
@@ -127,6 +127,7 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(imu.getHeading(), getModulePositions());  
+        logPeriodic();
     }
 
     public static Swerve getInstance(){
