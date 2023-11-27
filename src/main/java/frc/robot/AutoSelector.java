@@ -1,18 +1,18 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.lib.util.Waypoints;
 import frc.robot.commands.PurePursuitCommand;
 
 public class AutoSelector {
-    private static final String CSV_FILEPATH = RobotBase.isReal() ? "/home/lvuser/deploy/pathplanner/generatedCSV/" : 
-        System.getProperty("user.dir") + "/src/main/deploy/pathplanner/generatedCSV/";
-
     private LoggedDashboardChooser<Command> autoChooser;
     
     public AutoSelector() {
@@ -26,6 +26,7 @@ public class AutoSelector {
      * @return The selected auto from smart dashboard
      */
     public Command getSelectedCommand() {
+        DataLogManager.log("Sending command: " + autoChooser.get().toString());
         return autoChooser.get();
     }
 
@@ -33,7 +34,7 @@ public class AutoSelector {
 
     private SequentialCommandGroup getTestAuto() {
         return new SequentialCommandGroup(
-            new PurePursuitCommand(new Waypoints(CSV_FILEPATH + "TestPath1.csv"))
+            new PurePursuitCommand(PathPlannerPath.fromPathFile("TestPath1"))
         );
     }
 }

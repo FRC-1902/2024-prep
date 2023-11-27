@@ -26,8 +26,8 @@ public class Constants {
             COTSFalconSwerveConstants.SDSMK3(COTSFalconSwerveConstants.DriveGearRatios.SDSMK3_STANDARD);
 
         /* Drivetrain Constants */
-        public static final double TRACK_WIDTH = Units.inchesToMeters(21.25); 
-        public static final double WHEEL_BASE = Units.inchesToMeters(21.25); 
+        public static final double TRACK_WIDTH = Units.inchesToMeters(21); 
+        public static final double WHEEL_BASE = Units.inchesToMeters(21); 
         public static final double WHEEL_CIRCUMFERENCE = chosenModule.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -146,7 +146,7 @@ public class Constants {
         public static final double TARGET_ANGLE_DELTA = 0.5;
         public static final int TARGET_COUNT_AT_SETPIONT = 5; //number of robot loops to maintain at setpoint
 
-        // Cascading control into velocity PID, be careful //TODO: tune me
+        // Cascading control into velocity PID, be careful
         public static final double ANGLE_KP = 0.065;
         public static final double ANGLE_KI = 0.0;
         public static final double ANGLE_KD = 0.0;

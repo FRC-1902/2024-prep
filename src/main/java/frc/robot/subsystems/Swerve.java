@@ -1,19 +1,17 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
     private static Swerve instance;
@@ -43,7 +41,7 @@ public class Swerve extends SubsystemBase {
             Constants.Swerve.swerveKinematics, 
             imu.getHeading(), 
             getModulePositions(), 
-            new Pose2d(0.0, 0.0, imu.getHeading())
+            new Pose2d(0.0, 0.0, imu.getHeading()) // XXX: starting position on the field
         );
     }
 
@@ -59,9 +57,8 @@ public class Swerve extends SubsystemBase {
      * @param isOpenLoop
      */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        SwerveModuleState[] swerveModuleStates =
-            Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+        ChassisSpeeds speeds = 
+            fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                                     translation.getX(), 
                                     translation.getY(), 
                                     rotation, 
@@ -70,16 +67,24 @@ public class Swerve extends SubsystemBase {
                                 : new ChassisSpeeds(
                                     translation.getX(), 
                                     translation.getY(), 
-                                    rotation)
-                                );
+                                    rotation);
+        drive(speeds, isOpenLoop);
+    }
+
+    public void drive(ChassisSpeeds speeds, boolean isOpenLoop) {
+        SwerveModuleState[] swerveModuleStates =
+            Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.MAX_SPEED);
         
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
         }
+        // Logger.recordOutput("Swerve Desired Module States", swerveModuleStates);
+    }
 
-        Logger.recordOutput("Swerve Desired Module States", swerveModuleStates);
-    }    
+    public void drive(ChassisSpeeds speeds) {
+        drive(speeds, false);
+    }
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -115,7 +120,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro(){
-        imu.setOffset(imu.getHeading().plus(imu.getOffset()));
+        // TODO: fix me
+        imu.setOffset(imu.getHeading().minus(imu.getOffset()));
     }
 
     public void resetModulesToAbsolute(){
