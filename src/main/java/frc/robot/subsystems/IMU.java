@@ -1,41 +1,42 @@
-package frc.lib.sensors;
+package frc.robot.subsystems;
+
+
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.sensors.BNO055;
 import frc.robot.Constants;
 
-public class IMU {
+public class IMU extends SubsystemBase{
 
   private static IMU instance = new IMU();
 
+  // only velocity or acceleration can be used at once, can't use both at the same time
   private final BNO055 bno055Euler = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
     BNO055.vector_type_t.VECTOR_EULER);
-  // only velocity or acceleration can be used at once
-  // private final BNO055 bno055Accel = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
-  //   BNO055.vector_type_t.VECTOR_LINEARACCEL);
 
-  private DoubleLogEntry headingLogger, rollLogger, pitchLogger, turnLogger, offsetLogger; 
+  private Rotation2d offset;
 
-  private void initializeLogger() {
-    headingLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/heading");
-    rollLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/roll");
-    pitchLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/pitch");
-    turnLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/turn");
-    offsetLogger = new DoubleLogEntry(DataLogManager.getLog(), "/IMU/offset");
-
-    offsetLogger.append(bno055Euler.headingOffset);
-  }
-
-  public IMU() {
+  private IMU() {
+    offset = Rotation2d.fromDegrees(0);
     initializeLogger();
   }
 
-  public void logPeriodic() {
-    headingLogger.append(getHeading().getDegrees());
-    rollLogger.append(getRoll());
-    pitchLogger.append(getPitch());
-    turnLogger.append(getTurns());
+  private void initializeLogger() {
+    Logger.recordOutput("IMU heading", getHeading().getDegrees());
+    Logger.recordOutput("IMU roll", getRoll());
+    Logger.recordOutput("IMU pitch", getPitch());
+    Logger.recordOutput("IMU turn", getTurns());
+    Logger.recordOutput("IMU offset", offset.getDegrees());
+  }
+
+  @Override
+  public void periodic() {
+    Logger.recordOutput("IMU heading", getHeading().getDegrees());
+    Logger.recordOutput("IMU roll", getRoll());
+    Logger.recordOutput("IMU pitch", getPitch());
+    Logger.recordOutput("IMU turn", getTurns());
   }
 
   /**
@@ -43,7 +44,7 @@ public class IMU {
    */
   public Rotation2d getHeading() {
     double[] xyz = bno055Euler.getVector();
-    return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]) : Rotation2d.fromDegrees(xyz[0]);
+    return (Constants.Swerve.GYRO_INVERT) ? Rotation2d.fromDegrees(360 - xyz[0]).plus(offset) : Rotation2d.fromDegrees(xyz[0]).plus(offset);
   }
 
   /**
@@ -74,9 +75,16 @@ public class IMU {
   /**
    * @param offset sets imu x heading offset
    */
-  public void setOffset(double offset) {
-    bno055Euler.headingOffset = offset;
-    offsetLogger.append(offset);
+  public void setOffset(Rotation2d offset) {
+    this.offset = offset;
+    Logger.recordOutput("IMU offset", offset.getDegrees());
+  }
+
+  /**
+   * @return imu x heading offset
+   */
+  public Rotation2d getOffset() {
+    return offset;
   }
 
   /**

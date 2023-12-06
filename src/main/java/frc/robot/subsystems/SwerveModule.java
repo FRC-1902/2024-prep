@@ -16,7 +16,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-public class SwerveModule{
+public class SwerveModule {
   private int moduleNumber;
   private Rotation2d angleOffset;
   private Rotation2d lastAngle;
