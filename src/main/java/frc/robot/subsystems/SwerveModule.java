@@ -99,7 +99,8 @@ public class SwerveModule {
   }
 
   private void setAngle(SwerveModuleState desiredState){
-    Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.MAX_SPEED * 0.01)) ? lastAngle : desiredState.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
+    //Prevent rotating module if speed is less then 1%. Prevents Jittering.
+    Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.MAX_SPEED * 0.01)) ? lastAngle : desiredState.angle; 
     
     angleController.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
     lastAngle = angle;
@@ -109,6 +110,7 @@ public class SwerveModule {
     return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
   }
 
+  // XXX: Not actually pulling from cancoder
   public Rotation2d getCanCoder(){
     return (Constants.Swerve.CAN_CODER_INVERT) ? Rotation2d.fromRotations(1 - angleEncoder.getAbsolutePosition()) : Rotation2d.fromRotations(angleEncoder.getAbsolutePosition());
   }

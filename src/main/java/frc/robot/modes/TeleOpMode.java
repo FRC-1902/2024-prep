@@ -21,7 +21,7 @@ public class TeleOpMode implements OperationMode{
     }
 
     @Override
-    public void enter() {}
+    public void enter() {} // XXX: maybe make drive controller shake?
 
     @Override
     public void exit() {

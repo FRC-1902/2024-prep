@@ -20,8 +20,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.Swerve;
 
-// TODO: fixme is all broken
-
 public class PurePursuitCommand extends Command{
     private IMU imu;
     private Swerve swerveSubsystem;
@@ -141,13 +139,12 @@ public class PurePursuitCommand extends Command{
         Translation2d driveTarget = new Translation2d(targetVelocity, driveAngle);
         swerveSubsystem.drive(
             driveTarget,
-            angleControl(currentFacingAngle, targetFacingAngle), // TODO: fix angle controller
+            angleControl(currentFacingAngle, targetFacingAngle),
             true,
             false
         );
     }
 
-    // TODO: angle control broken, poses are null in waypointsPoses except for control targets. Populate through list
     /**
      * Cascading PID angle controller with error limiting to avoid instability
      * @param current
