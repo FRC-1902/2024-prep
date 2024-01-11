@@ -13,8 +13,8 @@ import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
 import frc.lib.util.CANSparkMaxUtil;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class SwerveModule {
   private int moduleNumber;
@@ -29,8 +29,8 @@ public class SwerveModule {
   private RelativeEncoder integratedAngleEncoder;
   private DutyCycleEncoder angleEncoder;
 
-  private final SparkMaxPIDController driveController;
-  private final SparkMaxPIDController angleController;
+  private final SparkPIDController driveController;
+  private final SparkPIDController angleController;
 
   SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Swerve.DRIVE_KS, Constants.Swerve.DRIVE_KV, Constants.Swerve.DRIVE_KA);
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
