@@ -123,8 +123,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro(){
-        // TODO: fix me
-        imu.setOffset(imu.getHeading().minus(imu.getOffset()));
+        imu.setOffset(imu.getOffset().minus(imu.getHeading()));
     }
 
     public void resetModulesToAbsolute(){
