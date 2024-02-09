@@ -1,7 +1,9 @@
 package frc.robot.modes;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import frc.lib.util.OperationMode;
 import frc.robot.Constants;
 import frc.robot.subsystems.Controllers;
@@ -47,11 +49,13 @@ public class TeleOpMode implements OperationMode{
 
         // cube controls for better handling, and scale down for softer pre-season movement
         translationVal = Math.pow(translationVal, 3.0);
-        translationVal *= 0.5;
+        translationVal *= 0.7;
         strafeVal = Math.pow(strafeVal, 3.0);
-        strafeVal *= 0.5;
+        strafeVal *= 0.7;
         rotationVal = Math.pow(rotationVal, 3.0);
-        rotationVal *= 0.5;
+        rotationVal *= 0.8;
+
+        
 
         // drive
         swerveSubsystem.drive(
